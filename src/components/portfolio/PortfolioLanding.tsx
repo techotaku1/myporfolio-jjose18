@@ -33,7 +33,9 @@ function useReveal() {
     for (const el of els) {
       io.observe(el);
     }
-    return () =>{  io.disconnect(); };
+    return () => {
+      io.disconnect();
+    };
   }, []);
 }
 

@@ -38,7 +38,9 @@ export function Nav() {
           type="button"
           className="nav-toggle"
           aria-label="Menú"
-          onClick={() =>{  setOpen((o) => !o); }}
+          onClick={() => {
+            setOpen((o) => !o);
+          }}
         >
           <Icon d={open ? STROKE_ICONS.close : STROKE_ICONS.menu} stroke />
         </button>
@@ -46,7 +48,13 @@ export function Nav() {
       {open && (
         <div className="mobile-menu">
           {LINKS.map(([href, label]) => (
-            <a key={href} href={href} onClick={() =>{  setOpen(false); }}>
+            <a
+              key={href}
+              href={href}
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
               {label}
             </a>
           ))}

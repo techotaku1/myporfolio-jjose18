@@ -48,7 +48,8 @@ export default async function proxy(request: NextRequest, event: NextFetchEvent)
     // oxlint-disable-next-line typescript/return-await
     return clerkMiddleware(async (auth, req) => {
       if (isProtectedRoute(req)) {
-        const locale = req.nextUrl.pathname.match(/(\/.*)\/dashboard/u)?.at(1) ?? '';
+        const dashboardIndex = req.nextUrl.pathname.indexOf('/dashboard');
+        const locale = dashboardIndex > 0 ? req.nextUrl.pathname.slice(0, dashboardIndex) : '';
 
         const signInUrl = new URL(`${locale}/sign-in`, req.url);
 

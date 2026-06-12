@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 type HexagonBackgroundProps = {
   hexagonSize?: number;
   hexagonMargin?: number;
-}
+};
 
 export function HexagonBackground(props: HexagonBackgroundProps) {
   const hexagonSize = props.hexagonSize ?? 75;
@@ -29,7 +29,9 @@ export function HexagonBackground(props: HexagonBackgroundProps) {
   useEffect(() => {
     updateGrid();
     window.addEventListener('resize', updateGrid);
-    return () =>{  window.removeEventListener('resize', updateGrid); };
+    return () => {
+      window.removeEventListener('resize', updateGrid);
+    };
   }, [updateGrid]);
 
   return (

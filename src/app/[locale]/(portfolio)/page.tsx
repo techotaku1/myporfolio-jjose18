@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { PortfolioLanding } from '@/components/portfolio/PortfolioLanding';
 
-const BASE_URL = 'https://portfolio.josedavid.vercel.app';
+const BASE_URL = 'https://portfolio-josedavid.vercel.app';
 
 type PortfolioHomePageProps = {
   params: Promise<{ locale: string }>;

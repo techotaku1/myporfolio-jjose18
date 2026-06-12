@@ -166,6 +166,18 @@ Drizzle ORM + PostgreSQL (PGlite local, Neon production). Schema in `src/models/
 
 Conventional commits without scope: `type: short specific summary` (feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert). `BREAKING CHANGE:` footer when required. Never add Co-Authored-By or AI attribution. Run relevant allowed checks before committing; screenshots for visible UI changes; no unrelated formatting churn. Never commit, push, or open a PR without explicit user approval.
 
+### Push convention (MANDATORY)
+
+When the user asks to push, deploy, or "subir todo al repo", the commit MUST pass the `lefthook` pre-commit gate (`ultracite` + `knip`). NEVER use `git commit --no-verify` to bypass it. The correct flow is:
+
+1. Run `npm run lint` (ultracite, type-aware) and `npm run check:deps` (knip) first.
+2. Fix every reported error by correcting the real cause. For vendored/tooling files that are not part of the app (e.g. `.agents/`, `.claude/`), exclude them at the config level (`oxlint.config.ts` `ignorePatterns`, `tsconfig.json` `exclude`, `knip.config.ts` `ignore`).
+3. Only then run a normal `git commit` so the hook validates a clean tree.
+
+**No cheating (MANDATORY):** NEVER add `// oxlint-disable`, `// oxlint-disable-next-line`, `// eslint-disable`, `@ts-ignore`, or `@ts-expect-error` to make the linter pass. These hide real problems. Fix the underlying code instead (hoist nested components, refactor deprecated APIs, use proper types, make decorative elements `aria-hidden`, etc.). A rule that genuinely does not apply to the whole project may be turned off once in the central `oxlint.config.ts` with a justification comment — but never silenced inline per file or per line. `git commit --no-verify` is likewise forbidden.
+
+If the hook still fails, stop and fix the cause — bypassing the gate hides real problems and ships broken code.
+
 ## Engram Memory
 
 Use Engram only for: continuing prior work ("continúa", "retoma", "vengo de otro agente"), meaningful decisions, non-trivial bug fixes, architecture/DB/auth/integration/testing-strategy changes, end-of-session summaries, and cross-agent handoffs (objective, files changed, commands run, risks, what not to do, next safe step). When a topic resurfaces, search memory before re-deriving context. Never store secrets, `DATABASE_URL`, base64, screenshots, logs, or code dumps. Not for tiny visual or copy edits.

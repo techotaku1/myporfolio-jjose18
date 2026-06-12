@@ -50,6 +50,10 @@ local
 # Local AI runtime state
 .atl/
 
+# AI tooling skills (installed via skills-lock.json, not part of the app)
+.agents/
+.claude/
+
 # vercel
 .vercel
 

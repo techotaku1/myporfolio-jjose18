@@ -21,8 +21,7 @@ export function Contact() {
       setForm((f) => ({ ...f, [key]: value }));
     };
 
-  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const submit = async () => {
     const next: FormErrors = {};
     if (!form.name.trim()) {
       next.name = 'Requerido';
@@ -73,7 +72,14 @@ export function Contact() {
         {sent ? (
           <div className="form-ok reveal">SEÑAL ENVIADA // Gracias, te responderé pronto.</div>
         ) : (
-          <form className="form-row reveal" onSubmit={submit} noValidate>
+          <form
+            className="form-row reveal"
+            onSubmit={async (e) => {
+              e.preventDefault();
+              await submit();
+            }}
+            noValidate
+          >
             <div className="form-row two">
               <div className={`field${errs.name ? ' err' : ''}`}>
                 <label htmlFor="name">NOMBRE</label>

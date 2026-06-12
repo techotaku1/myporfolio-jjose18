@@ -1,6 +1,15 @@
 import { useTranslations } from 'next-intl';
 import { AppConfig } from '@/utils/AppConfig';
 
+const renderAuthorLink = () => (
+  <a
+    href="https://nextjs-boilerplate.com"
+    className="text-blue-700 hover:border-b-2 hover:border-blue-700"
+  >
+    Next.js Boilerplate
+  </a>
+);
+
 export const BaseTemplate = (props: {
   leftNav: React.ReactNode;
   rightNav?: React.ReactNode;
@@ -34,14 +43,7 @@ export const BaseTemplate = (props: {
           {t.rich('footer_text', {
             year: new Date().getFullYear(),
             name: AppConfig.name,
-            author: () => (
-              <a
-                href="https://nextjs-boilerplate.com"
-                className="text-blue-700 hover:border-b-2 hover:border-blue-700"
-              >
-                Next.js Boilerplate
-              </a>
-            ),
+            author: renderAuthorLink,
           })}
 
           {/*

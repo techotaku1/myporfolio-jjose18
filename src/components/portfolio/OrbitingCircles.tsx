@@ -8,7 +8,7 @@ type OrbitingCirclesProps = {
   path?: boolean;
   iconSize?: number;
   speed?: number;
-}
+};
 
 export function OrbitingCircles(props: OrbitingCirclesProps) {
   const reverse = props.reverse ?? false;

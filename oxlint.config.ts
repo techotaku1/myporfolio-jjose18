@@ -6,6 +6,7 @@ import vitest from 'ultracite/oxlint/vitest';
 
 export default defineConfig({
   extends: [core, react, next, vitest],
+  ignorePatterns: ['.agents/**', '.claude/**'],
   rules: {
     'no-warning-comments': 'off', // Allow TODO and FIXME comments
     'no-inline-comments': 'off', // Allow nearby comments
@@ -23,6 +24,8 @@ export default defineConfig({
     'typescript/prefer-regexp-exec': 'off', // Allow use of String#match
 
     'unicorn/filename-case': 'off', // Impossible to enforce consistent filename case due to multiple conventions
+
+    'nextjs/no-img-element': 'off', // Portfolio renders local static SVG glyphs and satori (ImageResponse) markup; native <img> is correct here and next/image would require dangerouslyAllowSVG
 
     // --- JSDoc Rules ---
     'jsdoc/require-param': 'error',

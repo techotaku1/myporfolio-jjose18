@@ -13,17 +13,13 @@ export function ScrollProgress() {
     };
     window.addEventListener('scroll', update, { passive: true });
     update();
-    return () =>{  window.removeEventListener('scroll', update); };
+    return () => {
+      window.removeEventListener('scroll', update);
+    };
   }, []);
 
   return (
-    <div
-      className="scroll-progress-track"
-      role="progressbar"
-      aria-valuenow={Math.round(progress)}
-      aria-valuemin={0}
-      aria-valuemax={100}
-    >
+    <div className="scroll-progress-track" aria-hidden="true">
       <div className="scroll-progress-bar" style={{ width: `${progress}%` }} />
     </div>
   );
