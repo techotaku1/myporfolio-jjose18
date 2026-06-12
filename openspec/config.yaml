@@ -1,0 +1,92 @@
+schema: spec-driven
+
+project: curriculum
+persistence: hybrid
+strict_tdd: false
+
+context: |
+  Stack: Next.js 16.2.6 App Router, React 19.2.6, TypeScript 5.9.3, Tailwind CSS 4.3.0.
+  Architecture: Server Components with localized routes, Clerk auth, Drizzle ORM, PostgreSQL/PGlite, and T3 Env.
+  Testing: Vitest unit/browser tests, Playwright integration/E2E tests, Storybook tests, and V8 coverage.
+  Quality: Ultracite/Oxlint, Oxfmt, TypeScript, Knip, i18n-check, Lefthook, and Commitlint.
+  Runtime: Node.js 24+ with npm; agent validation commands use the repository bun allowlist.
+  CI: GitHub Actions build, static checks, unit, Storybook, E2E, visual regression, Checkly, Crowdin, and release workflows.
+  Conventions: Follow AGENTS.md, installed Next.js docs, absolute @/ imports, localized UI copy, and Conventional Commits.
+
+testing:
+  detected: '2026-06-11'
+  test_runner:
+    framework: Vitest
+    command: bun run test
+  layers:
+    unit:
+      available: true
+      tool: Vitest
+    component:
+      available: true
+      tool: Vitest Browser Mode with Playwright
+    integration:
+      available: true
+      tool: Playwright
+    e2e:
+      available: true
+      tool: Playwright
+  coverage:
+    available: true
+    command: npm run test -- --coverage
+    provider: V8
+  quality:
+    linter:
+      available: true
+      command: bun run lint
+    type_checker:
+      available: true
+      command: bun run check:types
+    formatter:
+      available: true
+      command: npx ultracite fix --type-aware --type-check
+      agent_allowed: false
+    dependency_checker:
+      available: true
+      command: bun run check:deps
+    i18n_checker:
+      available: true
+      command: bun run check:i18n
+    build:
+      available: true
+      command: bun run build-local
+
+rules:
+  proposal:
+    - Define the business problem, target users, scope, non-goals, risks, and rollback strategy.
+    - Preserve unrelated installation and workspace changes.
+  specs:
+    - Use RFC 2119 keywords for normative requirements.
+    - Express acceptance scenarios with Given, When, and Then.
+    - Keep user-visible behavior compatible with localization requirements.
+  design:
+    - Read relevant installed Next.js documentation before designing Next.js changes.
+    - Document architectural decisions, data boundaries, security implications, and failure modes.
+    - Prefer existing App Router, Clerk, Drizzle, PGlite, and shared-component patterns.
+  tasks:
+    - Group tasks by implementation phase with hierarchical numbering.
+    - Include tests and verification with the code they cover.
+    - Use only repository-approved agent commands unless explicit approval is obtained.
+  apply:
+    instructions:
+      - Follow AGENTS.md and load matching project skills before implementation.
+      - Preserve unrelated work and avoid changes to package scripts without explicit approval.
+      - Run focused, relevant tests after implementation for small changes.
+    tdd: false
+    test_command: bun run test
+  verify:
+    test_command: bun run test
+    typecheck_command: bun run check:types
+    lint_command: bun run lint
+    build_command: bun run build-local
+    e2e_command: bun run test:e2e
+    coverage_command: npm run test -- --coverage
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive or backward-incompatible deltas.
+    - Preserve archived changes as immutable audit history.
