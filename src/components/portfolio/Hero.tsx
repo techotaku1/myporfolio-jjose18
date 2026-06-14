@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Fragment } from 'react';
 import { HEADLINE, PROFILE } from './constants';
 import { BRAND_ICONS, STROKE_ICONS } from './data';
@@ -9,10 +10,23 @@ export function Hero() {
       <div className="hero-bg" />
       <div className="wrap hero-grid">
         <div>
-          <span className="status-pill">
-            <span className="ping" />
-            SISTEMA ONLINE // DISPONIBLE PARA PROYECTOS
-          </span>
+          <div className="hero-intro">
+            <div className="avatar">
+              <span className="avatar-ring" aria-hidden="true" />
+              <Image
+                src="/avatar.jpg"
+                alt={PROFILE.name}
+                width={120}
+                height={120}
+                preload
+                className="avatar-img"
+              />
+            </div>
+            <span className="status-pill">
+              <span className="ping" />
+              SISTEMA ONLINE // DISPONIBLE PARA PROYECTOS
+            </span>
+          </div>
           <h1 className="display">
             {HEADLINE.map((line, i) => (
               <Fragment key={line}>
