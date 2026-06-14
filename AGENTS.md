@@ -186,7 +186,7 @@ Cross-agent handoff: save a handoff memory before leaving an agent; update `docs
 
 ## GGA Code Review
 
-GGA (Gentleman Guardian Angel) reviews staged files on pre-commit when `.gga` exists. Point its `RULES_FILE` to a short, scannable review file (e.g. `docs/CODE-REVIEW.md`) using `REJECT if` / `REQUIRE` / `PREFER`; first response line must be exactly `STATUS: PASSED` or `STATUS: FAILED`. Treat failures as real review feedback; bypass only with justification via `git commit --no-verify`. Never weaken its rules without approval.
+GGA (Gentleman Guardian Angel) reviews staged files on pre-commit when `.gga` exists. Point its `RULES_FILE` to a short, scannable review file (e.g. `docs/CODE-REVIEW.md`) using `REJECT if` / `REQUIRE` / `PREFER`; first response line must be exactly `STATUS: PASSED` or `STATUS: FAILED`. Treat failures as real review feedback and fix the reported violations; never bypass with `git commit --no-verify` (see Push convention above). Never weaken its rules without approval.
 
 ## Final Safety Rules
 
