@@ -22,10 +22,7 @@ export function Hero() {
                 className="avatar-img"
               />
             </div>
-            <span className="status-pill">
-              <span className="ping" />
-              SISTEMA ONLINE // DISPONIBLE PARA PROYECTOS
-            </span>
+            <span className="hero-tagline">FULL STACK · IA DEVELOPMENT</span>
           </div>
           <h1 className="display">
             {HEADLINE.map((line, i) => (

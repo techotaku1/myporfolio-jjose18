@@ -439,48 +439,21 @@ html {
   }
 }
 
-.portfolio-root .status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.4rem 0.9rem;
-  border: 1px solid var(--primary-line);
-  background: var(--primary-soft);
-  color: var(--primary);
+.portfolio-root .hero-tagline {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  border-radius: 999px;
+  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  background: linear-gradient(90deg, var(--primary), var(--fg), var(--primary));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: tagline-shine 5s linear infinite;
 }
-.portfolio-root .ping {
-  position: relative;
-  display: inline-flex;
-  height: 8px;
-  width: 8px;
-}
-.portfolio-root .ping::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 999px;
-  background: var(--primary);
-  opacity: 0.75;
-  animation: ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-.portfolio-root .ping::after {
-  content: '';
-  position: relative;
-  display: inline-flex;
-  border-radius: 999px;
-  height: 8px;
-  width: 8px;
-  background: var(--primary);
-}
-@keyframes ping {
-  75%,
-  100% {
-    transform: scale(2.4);
-    opacity: 0;
+@keyframes tagline-shine {
+  to {
+    background-position: 200% center;
   }
 }
 
