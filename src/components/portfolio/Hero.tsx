@@ -14,7 +14,7 @@ export function Hero() {
             <div className="avatar">
               <span className="avatar-ring" aria-hidden="true" />
               <Image
-                src="/avatar.jpg"
+                src="/pic_profile_avatar.jpg"
                 alt={PROFILE.name}
                 width={120}
                 height={120}
