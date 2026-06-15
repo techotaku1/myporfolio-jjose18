@@ -18,6 +18,12 @@ const baseConfig: NextConfig = {
   outputFileTracingIncludes: {
     '/': ['./migrations/**/*'],
   },
+  images: {
+    // Prefer AVIF (smaller) with WebP fallback for older browsers
+    formats: ['image/avif', 'image/webp'],
+    // Cache optimized images for 31 days — static assets rarely change
+    minimumCacheTTL: 2_678_400,
+  },
 };
 
 // Initialize the Next-Intl plugin
