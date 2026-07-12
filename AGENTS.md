@@ -1,59 +1,22 @@
 <!-- NEXT-AGENTS-MD-START -->
 
+# Next.js: ALWAYS read docs before coding
+
+Before any Next.js work, find and read the relevant doc in `node_modules/next/dist/docs/`. Your training data is outdated — the docs are the source of truth.
+
+<!-- END:nextjs-agent-rules -->
+
 # Repository Agent Instructions
 
 How AI coding agents must work in this repository. The user describes changes in plain natural language; the agent infers the workflow, keeps token usage minimal, and protects the repo.
 
-## Context Loading
+## Core Rules
 
-`CLAUDE.md` must contain only `@AGENTS.md`. Never `@`-import skills, docs, or other files into session context — they are read on demand, per task.
+Shared agent rules — work modes (DIRECT / SDD CONTROLLED / SDD STRICT), token budget, language contract, commits and integrity, Engram scope, GGA, and safety — live in the user-level global `~/.claude/CLAUDE.md` under "Shared Repo Rules — Next.js Projects (DEV)" and apply here without repetition. Repo-specific deltas:
 
-## Natural Language First
-
-The user says things like "make these titles fit on one line on desktop" — nothing more. From that, the agent infers the size and risk of the change, the relevant files, whether SDD/OpenSpec or Engram is needed, and the smallest sufficient validation. Never require the user to name modes, workflows, or tooling; this file controls that behavior.
-
-## Language Contract
-
-- Replies to the user: always Spanish.
-- Code, comments, UI copy, docs, commits, PRs, and all generated artifacts: English, unless the user explicitly requests otherwise or the existing project context requires it.
-
-## Token Budget (hard rules)
-
-- Use the smallest workflow that safely solves the task.
-- Read only files likely relevant to the change. Never crawl the repo or `node_modules`.
-- No web search unless the task needs current external information or the user asks.
-- No subagents for tiny or local changes.
-- No SDD/OpenSpec artifacts for tiny direct changes.
-- Do not read skills or documentation for small copy, typography, spacing, color, or Tailwind-class edits.
-- Engram: at most ~3 calls before implementation; only when continuing prior work or recording a real decision.
-- Never store screenshots, base64 images, logs, or large code dumps in Engram, specs, or prompts. If the user provides an image, summarize the visual issue in 1-2 sentences.
-- If a small task grows, stop and explain before escalating.
-
-## Automatic Work Mode Selection
-
-Classify every implementation request silently — the user never names the mode. There is no mode called "SDD Lite".
-
-| Mode | Use when | Behavior |
-| --- | --- | --- |
-| `DIRECT` | Tiny, low-risk change in 1 file or a small local area: copy, typography, spacing, color, Tailwind classes, a label, a typo, an isolated bug fix | No SDD, no subagents, no web, no broad reading; touch only the exact files |
-| `SDD CONTROLLED` (`strict_tdd: false`) | 1-3 related files; limited UI behavior, component structure, validation, data fetching, or tests; reversible; no new architecture | Short plan and traceability only when useful; no RED/GREEN/REFACTOR; at most 1 focused skill |
-| `SDD STRICT` (`strict_tdd: true`) | 4+ files; database schema/migrations, auth, Clerk, middleware, caching, i18n architecture, routing, public APIs, server actions, payments, security, CI; new features or integrations; ambiguous or high-risk work; user explicitly asks for SDD/TDD | Full SDD/OpenSpec discipline, Engram recovery, small batches, verification |
-
-Tie-breaks: DIRECT vs CONTROLLED → choose DIRECT and stop if scope grows. CONTROLLED vs STRICT → choose STRICT. If the user explicitly picks a mode, follow it unless unsafe. Never turn a tiny visual change into SDD STRICT. Do not edit global/project SDD config to toggle `strict_tdd` for one change without explicit approval.
-
-Escalation: DIRECT → CONTROLLED when more files or non-trivial behavior appear; CONTROLLED → STRICT when architecture, database, auth, cache, i18n, routes, public APIs, or a 4th file appears. De-escalate only after explaining why.
-
-### Workflow per mode
-
-`DIRECT`: inspect only the exact relevant files → tell the user briefly in Spanish (small direct change, likely files, short plan) → wait for approval only if the user asked to approve first or the impact is not obvious → make the minimal change → run the smallest relevant allowed validation only when it adds real signal → summarize in 1-3 lines.
-
-`SDD CONTROLLED`: check `git status` → inspect only relevant files → keep proposal/tasks short, and only when they truly help or the user asked → explain briefly in Spanish (workflow, files, plan, validation) → wait for approval unless risk is trivial → smallest coherent change → relevant allowed checks only → save an Engram memory only for real decisions or non-trivial fixes → summarize.
-
-`SDD STRICT`: recover Engram context → check `git status` and OpenSpec state (initialize SDD context if missing; reuse an active relevant change) → proposal/design/tasks before implementing → explain in Spanish (change name, files, plan, validation strategy, risks) → wait for explicit approval → apply in small batches → verify against specs → run relevant checks → sync/archive after verification with approval → save an Engram session summary.
-
-## Next.js Documentation Rule
-
-Read the relevant installed doc under `node_modules/next/dist/docs/` only when the task depends on Next.js behavior (routing, Server Components, caching, metadata, route handlers, middleware/proxy, App Router conventions). Never for visual-only Tailwind, copy, typography, or spacing edits. Read only the exact relevant file; if it is missing, fall back to local skills and installed versions — do not fail the task.
+- Extra SDD STRICT triggers: Clerk, i18n architecture.
+- Cross-agent handoff: save an Engram handoff before leaving an agent; update `docs/ai-handoff/CURRENT.md` if it exists; on arrival search Engram, read the handoff file, check `git status` and OpenSpec, and summarize before touching files.
+- GGA rules use `REJECT if` / `REQUIRE` / `PREFER`; first response line must be exactly `STATUS: PASSED` or `STATUS: FAILED`.
 
 ## Skills
 
@@ -161,38 +124,3 @@ Drizzle ORM + PostgreSQL (PGlite local, Neon production). Schema in `src/models/
 - Dashboard pages sit behind auth; define shared metadata once in the relevant layout.
 - Never hard-code user-visible strings in localized code. `getTranslations` on the server, `useTranslations` in client components; context-specific keys (`card_title`, `meta_description`); namespaces end with `Page`; `t.rich(...)` for markup; sentence case.
 - Tailwind CSS 4 utilities and existing theme tokens; reuse shared components; keep layouts responsive; no unnecessary utility classes.
-
-## Commits and PRs
-
-Conventional commits without scope: `type: short specific summary` (feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert). `BREAKING CHANGE:` footer when required. Never add Co-Authored-By or AI attribution. Run relevant allowed checks before committing; screenshots for visible UI changes; no unrelated formatting churn. Never commit, push, or open a PR without explicit user approval.
-
-### Push convention (MANDATORY)
-
-When the user asks to push, deploy, or "subir todo al repo", the commit MUST pass the `lefthook` pre-commit gate (`ultracite` + `knip`). NEVER use `git commit --no-verify` to bypass it. The correct flow is:
-
-1. Run `npm run lint` (ultracite, type-aware) and `npm run check:deps` (knip) first.
-2. Fix every reported error by correcting the real cause. For vendored/tooling files that are not part of the app (e.g. `.agents/`, `.claude/`), exclude them at the config level (`oxlint.config.ts` `ignorePatterns`, `tsconfig.json` `exclude`, `knip.config.ts` `ignore`).
-3. Only then run a normal `git commit` so the hook validates a clean tree.
-
-**No cheating (MANDATORY):** NEVER add `// oxlint-disable`, `// oxlint-disable-next-line`, `// eslint-disable`, `@ts-ignore`, or `@ts-expect-error` to make the linter pass. These hide real problems. Fix the underlying code instead (hoist nested components, refactor deprecated APIs, use proper types, make decorative elements `aria-hidden`, etc.). A rule that genuinely does not apply to the whole project may be turned off once in the central `oxlint.config.ts` with a justification comment — but never silenced inline per file or per line. `git commit --no-verify` is likewise forbidden.
-
-If the hook still fails, stop and fix the cause — bypassing the gate hides real problems and ships broken code.
-
-## Engram Memory
-
-Use Engram only for: continuing prior work ("continúa", "retoma", "vengo de otro agente"), meaningful decisions, non-trivial bug fixes, architecture/DB/auth/integration/testing-strategy changes, end-of-session summaries, and cross-agent handoffs (objective, files changed, commands run, risks, what not to do, next safe step). When a topic resurfaces, search memory before re-deriving context. Never store secrets, `DATABASE_URL`, base64, screenshots, logs, or code dumps. Not for tiny visual or copy edits.
-
-Cross-agent handoff: save a handoff memory before leaving an agent; update `docs/ai-handoff/CURRENT.md` if it exists. When arriving: search Engram, read the handoff file if present, check `git status` and OpenSpec active changes, then summarize before touching files. "Continúa con lo último" → recover context automatically.
-
-## GGA Code Review
-
-GGA (Gentleman Guardian Angel) reviews staged files on pre-commit when `.gga` exists. Point its `RULES_FILE` to a short, scannable review file (e.g. `docs/CODE-REVIEW.md`) using `REJECT if` / `REQUIRE` / `PREFER`; first response line must be exactly `STATUS: PASSED` or `STATUS: FAILED`. Treat failures as real review feedback and fix the reported violations; never bypass with `git commit --no-verify` (see Push convention above). Never weaken its rules without approval.
-
-## Final Safety Rules
-
-- Never commit, push, deploy, or run migrations without explicit user approval.
-- Never expose secrets or `.env` values; keep `.env*` out of git.
-- Never overwrite or revert unrelated work.
-- Never run destructive database operations without explicit approval.
-- Never convert a tiny visual change into a full SDD STRICT workflow.
-- If unsure, ask one concise question in Spanish and stop.
