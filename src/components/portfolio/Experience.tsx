@@ -6,7 +6,10 @@ export function Experience() {
       <div className="wrap">
         <div className="sec-head reveal">
           <div>
-            <h2 className="display">TRAYECTORIA</h2>
+            <span className="eyebrow">EXPERIENCIA</span>
+            <h2 className="display" style={{ marginTop: '0.75rem' }}>
+              TRAYECTORIA
+            </h2>
             <div className="rule" style={{ marginTop: '1rem' }} />
           </div>
           <p className="muted sub">Experiencia profesional y formación académica.</p>

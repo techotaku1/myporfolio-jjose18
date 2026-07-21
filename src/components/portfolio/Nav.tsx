@@ -1,20 +1,59 @@
 'use client';
 
-import { useState } from 'react';
-import { PROFILE } from './constants';
-import { STROKE_ICONS } from './data';
-import { Icon } from './Icon';
+import { Bot, FolderGit2, Layers, Mail, Route } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import type { NavItem } from '@/components/ui/limelight-nav';
+import { LimelightNav } from '@/components/ui/limelight-nav';
 
-const LINKS: [string, string][] = [
-  ['#proyectos', 'Proyectos'],
-  ['#ia', 'IA · Agentes'],
-  ['#stack', 'Stack'],
-  ['#experiencia', 'Trayectoria'],
-  ['#contacto', 'Contacto'],
-];
+const SECTIONS = [
+  { id: 'proyectos', label: 'Proyectos', icon: <FolderGit2 /> },
+  { id: 'ia', label: 'IA · Agentes', icon: <Bot /> },
+  { id: 'stack', label: 'Stack', icon: <Layers /> },
+  { id: 'experiencia', label: 'Trayectoria', icon: <Route /> },
+  { id: 'contacto', label: 'Contacto', icon: <Mail /> },
+] as const;
 
 export function Nav() {
-  const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Scroll-spy: keep the limelight on whichever section crosses the viewport
+  // center. Syncs with the DOM via IntersectionObserver — a genuine external
+  // system.
+  useEffect(() => {
+    const sections = SECTIONS.map((s) => document.querySelector(`#${s.id}`)).filter(
+      (el): el is HTMLElement => el !== null,
+    );
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const index = SECTIONS.findIndex((s) => s.id === entry.target.id);
+            if (index !== -1) {
+              setActiveIndex(index);
+            }
+          }
+        }
+      },
+      { rootMargin: '-45% 0px -45% 0px', threshold: 0 },
+    );
+
+    for (const el of sections) {
+      io.observe(el);
+    }
+    return () => {
+      io.disconnect();
+    };
+  }, []);
+
+  const items: NavItem[] = SECTIONS.map((s) => ({
+    id: s.id,
+    icon: s.icon,
+    label: s.label,
+    onClick: () => {
+      document.querySelector(`#${s.id}`)?.scrollIntoView({ behavior: 'smooth' });
+    },
+  }));
 
   return (
     <header className="nav">
@@ -24,42 +63,18 @@ export function Nav() {
           <span>_</span>
           Gonzalez
         </a>
-        <nav className="nav-links">
-          {LINKS.map(([href, label]) => (
-            <a key={href} href={href}>
-              {label}
-            </a>
-          ))}
-        </nav>
-        <a className="btn btn-outline nav-cta" href={`mailto:${PROFILE.email}`}>
+
+        <LimelightNav
+          items={items}
+          activeIndex={activeIndex}
+          className="limelight-header"
+          iconContainerClassName="px-3 sm:px-5"
+        />
+
+        <a className="btn btn-outline nav-cta" href="#contacto">
           hablemos.sh
         </a>
-        <button
-          type="button"
-          className="nav-toggle"
-          aria-label="Menú"
-          onClick={() => {
-            setOpen((o) => !o);
-          }}
-        >
-          <Icon d={open ? STROKE_ICONS.close : STROKE_ICONS.menu} stroke />
-        </button>
       </div>
-      {open && (
-        <div className="mobile-menu">
-          {LINKS.map(([href, label]) => (
-            <a
-              key={href}
-              href={href}
-              onClick={() => {
-                setOpen(false);
-              }}
-            >
-              {label}
-            </a>
-          ))}
-        </div>
-      )}
     </header>
   );
 }

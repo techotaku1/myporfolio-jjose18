@@ -61,7 +61,7 @@ export function Contact() {
     <section className="sec contact divider" id="contacto">
       <div className="wrap contact-inner">
         <div className="contact-head reveal">
-          <span className="eyebrow">// INITIATE_CONTACT</span>
+          <span className="eyebrow">INITIATE_CONTACT</span>
           <h2 className="display" style={{ fontSize: 'clamp(2rem,5vw,3rem)', margin: '0.75rem 0' }}>
             HABLEMOS
           </h2>

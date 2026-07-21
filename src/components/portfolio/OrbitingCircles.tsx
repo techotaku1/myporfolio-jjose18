@@ -19,7 +19,10 @@ export function OrbitingCircles(props: OrbitingCirclesProps) {
   const speed = props.speed ?? 1;
 
   const calculatedDuration = duration / speed;
-  const count = React.Children.count(props.children);
+  const items: React.ReactNode[] = Array.isArray(props.children)
+    ? props.children
+    : [props.children].filter((child) => child !== undefined && child !== null);
+  const count = items.length;
 
   return (
     <>
@@ -38,10 +41,11 @@ export function OrbitingCircles(props: OrbitingCirclesProps) {
           <circle cx="50%" cy="50%" r={radius} fill="none" className="orbit-ring" />
         </svg>
       )}
-      {React.Children.map(props.children, (child, index) => {
+      {items.map((child, index) => {
         const angle = (360 / count) * index;
         return (
           <div
+            key={index}
             className={`orbit-item${reverse ? ' orbit-reverse' : ''}`}
             style={
               {

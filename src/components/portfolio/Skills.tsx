@@ -15,7 +15,10 @@ export function Skills() {
       <div className="wrap">
         <div className="sec-head reveal">
           <div>
-            <h2 className="display">TECH_STACK</h2>
+            <span className="eyebrow">HERRAMIENTAS_DIARIAS</span>
+            <h2 className="display" style={{ marginTop: '0.75rem' }}>
+              TECH_STACK
+            </h2>
             <div className="rule" style={{ marginTop: '1rem' }} />
           </div>
           <p className="muted sub">
@@ -67,7 +70,7 @@ export function Skills() {
         </div>
         <div className="orbit-container reveal">
           <div className="orbit-center">
-            <span className="orbit-center-label">// STACK</span>
+            <span className="orbit-center-label">STACK</span>
             <span className="orbit-center-title">IA_AGENTIC</span>
           </div>
           <OrbitingCircles radius={130} duration={18} iconSize={48}>

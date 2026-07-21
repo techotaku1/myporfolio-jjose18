@@ -27,6 +27,15 @@ export default defineConfig({
 
     'nextjs/no-img-element': 'off', // Portfolio renders local static SVG glyphs and satori (ImageResponse) markup; native <img> is correct here and next/image would require dangerouslyAllowSVG
 
+    // Only use in the repo: JSON-LD structured data in page.tsx, rendered from a
+    // server-defined static object (no user input), with `<` escaped per Next.js's
+    // own documented JSON-LD guidance (node_modules/next/dist/docs/01-app/02-guides/json-ld.md).
+    'react/no-danger': 'off',
+
+    // React's useSyncExternalStore mandates a sync `(callback) => cleanup` subscribe
+    // shape (HexagonBackground.tsx) — there is no async/await equivalent for it.
+    'promise/prefer-await-to-callbacks': 'off',
+
     // --- JSDoc Rules ---
     'jsdoc/require-param': 'error',
     'jsdoc/require-param-description': 'error',

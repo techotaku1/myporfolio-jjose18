@@ -11,6 +11,10 @@ const baseConfig: NextConfig = {
   },
   poweredByHeader: false,
   reactStrictMode: true,
+  // Arcjet ships its analysis engine as inlined WASM whose virtual modules do
+  // not resolve under Turbopack. The proxy runs in the Node.js runtime, so
+  // opt these packages out of bundling and let Node `require` them natively.
+  serverExternalPackages: ['@arcjet/next', 'arcjet', '@arcjet/analyze', '@arcjet/analyze-wasm'],
   reactCompiler: process.env.NODE_ENV === 'production', // Keep the development environment fast
   logging: {
     browserToTerminal: process.env.BROWSER_TO_TERMINAL_DISABLED !== 'true',

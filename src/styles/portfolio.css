@@ -58,25 +58,6 @@
   pointer-events: auto;
 }
 
-/* ---- scroll progress bar ---- */
-.portfolio-root .scroll-progress-track {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  z-index: 200;
-  background: transparent;
-  pointer-events: none;
-}
-.portfolio-root .scroll-progress-bar {
-  height: 100%;
-  background: var(--primary);
-  box-shadow: 0 0 8px var(--primary);
-  transition: width 80ms linear;
-  will-change: width;
-}
-
 /* ---- floating WhatsApp button ---- */
 .portfolio-root .wa-btn {
   position: fixed;
@@ -215,6 +196,10 @@ html {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);
+}
+.portfolio-root .eyebrow::before {
+  content: '// ';
+  color: var(--primary);
 }
 
 /* ---- layout ---- */
@@ -581,20 +566,25 @@ html {
 }
 .portfolio-root .sec-head h2 {
   font-size: clamp(2.2rem, 6vw, 4rem);
+  text-wrap: balance;
 }
 .portfolio-root .sec-head .rule {
-  height: 4px;
-  width: 88px;
-  background: var(--primary);
+  height: 3px;
+  width: 72px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--primary), transparent);
+  box-shadow: 0 0 18px var(--primary-soft);
 }
 @media (min-width: 760px) {
   .portfolio-root .sec-head {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: clamp(2rem, 6vw, 5rem);
     align-items: end;
   }
   .portfolio-root .sec-head .sub {
-    max-width: 32ch;
+    max-width: 34ch;
     text-align: left;
+    padding-bottom: 0.35rem;
   }
 }
 
@@ -884,6 +874,10 @@ html {
   color: var(--muted);
   letter-spacing: 0.1em;
 }
+.portfolio-root .orbit-center-label::before {
+  content: '// ';
+  color: var(--primary);
+}
 .portfolio-root .orbit-center-title {
   font-family: var(--font-display);
   font-size: 1rem;
@@ -1132,5 +1126,26 @@ html {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+}
+
+/* ===== Limelight nav (header) ===== */
+/* No container chrome: drop the card background and border so only the icons
+   sit in the header, spaced apart, lit by the limelight beam. */
+.portfolio-root .limelight-header {
+  margin-inline: auto;
+  gap: clamp(0.5rem, 1.5vw, 1.25rem);
+  border: 0;
+  background: transparent;
+}
+/* Below the desktop breakpoint the pill becomes the whole nav: drop the logo
+   and text CTA so five icons fit a phone without overflowing. */
+@media (max-width: 767px) {
+  .portfolio-root .nav-inner .logo,
+  .portfolio-root .nav-inner .nav-cta {
+    display: none;
+  }
+  .portfolio-root .limelight-header {
+    height: 3.5rem;
   }
 }

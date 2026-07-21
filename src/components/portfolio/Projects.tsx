@@ -8,7 +8,10 @@ export function Projects() {
       <div className="wrap">
         <div className="sec-head reveal">
           <div>
-            <h2 className="display">PROYECTOS DESTACADOS</h2>
+            <span className="eyebrow">TRABAJO_SELECCIONADO</span>
+            <h2 className="display" style={{ marginTop: '0.75rem' }}>
+              PROYECTOS DESTACADOS
+            </h2>
             <div className="rule" style={{ marginTop: '1rem' }} />
           </div>
           <p className="muted sub">

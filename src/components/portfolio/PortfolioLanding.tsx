@@ -9,7 +9,6 @@ import { Hero } from './Hero';
 import { HexagonBackground } from './HexagonBackground';
 import { Nav } from './Nav';
 import { Projects } from './Projects';
-import { ScrollProgress } from './ScrollProgress';
 import { Skills } from './Skills';
 import { WhatsAppButton } from './WhatsAppButton';
 
@@ -44,7 +43,6 @@ export function PortfolioLanding() {
 
   return (
     <>
-      <ScrollProgress />
       <HexagonBackground />
       <div className="hbg-content">
         <Nav />

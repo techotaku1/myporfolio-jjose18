@@ -1,11 +1,22 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useSyncExternalStore } from 'react';
 
 type HexagonBackgroundProps = {
   hexagonSize?: number;
   hexagonMargin?: number;
 };
+
+function subscribeToResize(callback: () => void) {
+  window.addEventListener('resize', callback);
+  return () => {
+    window.removeEventListener('resize', callback);
+  };
+}
+
+function getServerGridSnapshot() {
+  return 0;
+}
 
 export function HexagonBackground(props: HexagonBackgroundProps) {
   const hexagonSize = props.hexagonSize ?? 75;
@@ -17,22 +28,15 @@ export function HexagonBackground(props: HexagonBackgroundProps) {
   const baseMarginTop = -36 - 0.275 * (hexagonSize - 100);
   const computedMarginTop = baseMarginTop + hexagonMargin;
 
-  const [grid, setGrid] = useState({ rows: 0, columns: 0 });
+  const getRows = useCallback(() => Math.ceil(window.innerHeight / rowSpacing) + 2, [rowSpacing]);
+  const getColumns = useCallback(
+    () => Math.ceil(window.innerWidth / hexagonWidth) + 2,
+    [hexagonWidth],
+  );
 
-  const updateGrid = useCallback(() => {
-    setGrid({
-      rows: Math.ceil(window.innerHeight / rowSpacing) + 2,
-      columns: Math.ceil(window.innerWidth / hexagonWidth) + 2,
-    });
-  }, [rowSpacing, hexagonWidth]);
-
-  useEffect(() => {
-    updateGrid();
-    window.addEventListener('resize', updateGrid);
-    return () => {
-      window.removeEventListener('resize', updateGrid);
-    };
-  }, [updateGrid]);
+  const rows = useSyncExternalStore(subscribeToResize, getRows, getServerGridSnapshot);
+  const columns = useSyncExternalStore(subscribeToResize, getColumns, getServerGridSnapshot);
+  const grid = { rows, columns };
 
   return (
     <div className="hbg-wrap" aria-hidden="true">
