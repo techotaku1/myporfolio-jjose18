@@ -814,6 +814,10 @@ html {
   margin-top: 3rem;
   margin-bottom: 1rem;
 }
+.portfolio-root .tech-badges-title::before {
+  content: '// ';
+  color: var(--primary);
+}
 /* ---- tech badges ---- */
 .portfolio-root .tech-badges {
   display: flex;
