@@ -152,7 +152,7 @@ export const TECH_BADGES: TechBadge[] = [
   { label: 'JavaScript', icon: 'javascript.svg' },
   { label: 'Tailwind CSS', icon: 'tailwindcss.svg' },
   { label: 'Python', icon: 'python.svg' },
-  { label: 'n8n', icon: 'n8n.svg' },
+  { label: 'n8n', icon: 'n8n.svg', invert: true },
   { label: 'Neon', icon: 'neon-icon.svg' },
   { label: 'PostgreSQL', icon: 'postgresql.svg' },
   { label: 'Drizzle', icon: 'drizzle.svg' },
