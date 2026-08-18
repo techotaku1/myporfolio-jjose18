@@ -24,6 +24,10 @@ export const metadata: Metadata = {
     default: 'Jose David Gonzalez — Full-Stack & IA Developer',
     template: '%s | Jose David Gonzalez',
   },
+  // Fallback description for routes that do not define their own, so no page
+  // is served without one.
+  description:
+    'Desarrollador Full-Stack en Cali, Colombia. Aplicaciones web a medida con React, Next.js y Python.',
   verification: googleVerification ? { google: googleVerification } : undefined,
   icons: [
     { rel: 'icon', type: 'image/svg+xml', url: '/user-icon-base.svg' },

@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { CONTENT_LAST_MODIFIED } from '@/utils/AppConfig';
 import { getBaseUrl } from '@/utils/Helpers';
 
 /**
@@ -15,9 +16,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified: new Date(CONTENT_LAST_MODIFIED),
       changeFrequency: 'monthly',
       priority: 1,
+      images: [`${baseUrl}/pic_profile_avatar.jpg`],
     },
   ];
 }
