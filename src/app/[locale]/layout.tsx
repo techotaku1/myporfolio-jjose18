@@ -7,15 +7,24 @@ import { CONTENT_LANG } from '@/utils/AppConfig';
 import { getBaseUrl } from '@/utils/Helpers';
 import '@/styles/global.css';
 
+/**
+ * Search Console hands out the token twice in different shapes: the DNS record
+ * is `google-site-verification=<token>`, while the HTML tag expects the bare
+ * `<token>`. Pasting the DNS form into the env var renders a meta tag Google
+ * silently rejects, so strip the prefix if it is present.
+ */
+const googleVerification = Env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.replace(
+  /^google-site-verification=/u,
+  '',
+);
+
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
   title: {
     default: 'Jose David Gonzalez — Full-Stack & IA Developer',
     template: '%s | Jose David Gonzalez',
   },
-  verification: Env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
-    ? { google: Env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
-    : undefined,
+  verification: googleVerification ? { google: googleVerification } : undefined,
   icons: [
     { rel: 'icon', type: 'image/svg+xml', url: '/user-icon-base.svg' },
     { rel: 'icon', type: 'image/png', sizes: '32x32', url: '/api/icon?size=32' },
