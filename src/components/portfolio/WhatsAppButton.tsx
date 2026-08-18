@@ -1,11 +1,13 @@
+import { WHATSAPP_URL } from './constants';
+
 export function WhatsAppButton() {
   return (
     <a
-      href="https://wa.me/573225727602"
+      href={WHATSAPP_URL}
       target="_blank"
       rel="noopener noreferrer"
       className="wa-btn"
-      aria-label="Contactar por WhatsApp"
+      aria-label="Escribir por WhatsApp para cotizar un proyecto"
     >
       <span className="wa-svg">
         <svg viewBox="0 0 16 16" height="1.5em" fill="white" aria-hidden="true">

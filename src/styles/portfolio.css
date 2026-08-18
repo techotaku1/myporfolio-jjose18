@@ -251,6 +251,16 @@ html {
   color: var(--primary);
   background: var(--primary-soft);
 }
+.portfolio-root .btn-secondary {
+  background: transparent;
+  color: var(--fg);
+  border-color: var(--border);
+}
+.portfolio-root .btn-secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-soft);
+}
 .portfolio-root .btn-ghost {
   background: transparent;
   color: var(--muted);

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { PROFILE } from './constants';
+import { PROFILE, WHATSAPP_URL } from './constants';
 
 type FormState = { name: string; email: string; msg: string };
 type FormErrors = Partial<Record<keyof FormState, string>>;
@@ -66,8 +66,19 @@ export function Contact() {
             HABLEMOS
           </h2>
           <p className="muted">
-            ¿Tienes un proyecto en mente o quieres construir algo con IA? Envíame una señal.
+            ¿Necesitas una aplicación web, una landing o automatizar un proceso con IA? La vía más
+            rápida es WhatsApp: normalmente respondo el mismo día.
           </p>
+          <a
+            href={WHATSAPP_URL}
+            className="btn"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-analytics="contact-whatsapp"
+            style={{ marginTop: '1.25rem' }}
+          >
+            Cotizar por WhatsApp
+          </a>
         </div>
         {sent ? (
           <div className="form-ok reveal">SEÑAL ENVIADA // Gracias, te responderé pronto.</div>
@@ -133,7 +144,9 @@ export function Contact() {
         )}
         <div className="contact-meta">
           <a href={`mailto:${PROFILE.email}`}>{PROFILE.email}</a>
-          <span>{PROFILE.phone}</span>
+          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+            {PROFILE.phone}
+          </a>
           <span>{PROFILE.location}</span>
         </div>
       </div>

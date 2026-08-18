@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
+import { PHONE_E164, SERVICES, WHATSAPP_URL } from '@/components/portfolio/constants';
 import { PortfolioLanding } from '@/components/portfolio/PortfolioLanding';
 import { getBaseUrl } from '@/utils/Helpers';
 
 const BASE_URL = getBaseUrl();
 
 const DESCRIPTION =
-  'Desarrollador Full-Stack e IA en Cali, Colombia. React, Next.js, TypeScript, Python y sistemas agénticos. Disponible para proyectos freelance.';
+  'Desarrollador Full-Stack en Cali, Colombia. Creo aplicaciones web a medida con React, Next.js y Python. Proyectos freelance — contacto directo por WhatsApp.';
 
 export const metadata: Metadata = {
   title: 'Jose David Gonzalez — Full-Stack & IA Developer',
@@ -22,6 +23,10 @@ export const metadata: Metadata = {
     'sistemas agénticos',
     'inteligencia artificial',
     'desarrollador web Cali',
+    'desarrollador web Colombia',
+    'crear aplicacion web Colombia',
+    'programador freelance Cali',
+    'desarrollo de paginas web Valle del Cauca',
     'Colombia',
     'freelance',
   ],
@@ -75,6 +80,7 @@ const jsonLd = {
         addressCountry: 'CO',
       },
       email: 'jsdg1818@gmail.com',
+      telephone: PHONE_E164,
       sameAs: ['https://github.com/techotaku1', 'https://www.linkedin.com/in/jjose18/'],
       nationality: { '@type': 'Country', name: 'Colombia' },
       knowsLanguage: [
@@ -101,6 +107,52 @@ const jsonLd = {
         'Sistemas Agénticos',
         'Full-Stack Development',
       ],
+    },
+    {
+      '@type': 'ProfessionalService',
+      '@id': `${BASE_URL}/#service`,
+      name: 'Jose David Gonzalez — Desarrollo de aplicaciones web',
+      description:
+        'Desarrollo de aplicaciones web a medida, landing pages, backends y automatizaciones con IA para empresas y emprendedores en Colombia.',
+      url: BASE_URL,
+      image: `${BASE_URL}/pic_profile_avatar.jpg`,
+      provider: { '@id': `${BASE_URL}/#person` },
+      telephone: PHONE_E164,
+      email: 'jsdg1818@gmail.com',
+      priceRange: '$$',
+      availableLanguage: ['es', 'en'],
+      areaServed: [
+        { '@type': 'Country', name: 'Colombia' },
+        { '@type': 'City', name: 'Cali' },
+        { '@type': 'State', name: 'Valle del Cauca' },
+      ],
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Cali',
+        addressRegion: 'Valle del Cauca',
+        addressCountry: 'CO',
+      },
+      contactPoint: {
+        '@type': 'ContactPoint',
+        contactType: 'sales',
+        telephone: PHONE_E164,
+        email: 'jsdg1818@gmail.com',
+        availableLanguage: ['es', 'en'],
+        url: WHATSAPP_URL,
+      },
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Servicios de desarrollo web',
+        itemListElement: SERVICES.map((service) => ({
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: service.name,
+            description: service.desc,
+            areaServed: { '@type': 'Country', name: 'Colombia' },
+          },
+        })),
+      },
     },
     {
       '@type': 'WebSite',

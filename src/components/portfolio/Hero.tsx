@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Fragment } from 'react';
-import { HEADLINE, PROFILE } from './constants';
+import { HEADLINE, PROFILE, WHATSAPP_URL } from './constants';
 import { BRAND_ICONS, STROKE_ICONS } from './data';
 import { Icon } from './Icon';
 
@@ -33,13 +33,22 @@ export function Hero() {
             ))}
           </h1>
           <p className="lead">
-            Tecnólogo en Sistemas y Desarrollador Full-Stack. Construyo plataformas de alto
-            rendimiento con React, Next.js y FastAPI — y desarrollo de forma nativa con IA y
-            sistemas agénticos.
+            Tecnólogo en Sistemas y Desarrollador Full-Stack en Cali, Colombia. Construyo
+            aplicaciones web a medida con React, Next.js y FastAPI — y desarrollo de forma nativa
+            con IA y sistemas agénticos. Disponible para proyectos freelance.
           </p>
           <div className="hero-actions">
-            <a href="#proyectos" className="btn">
-              Ver proyectos <Icon d={STROKE_ICONS.arrow} stroke size={16} />
+            <a
+              href={WHATSAPP_URL}
+              className="btn"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-analytics="hero-whatsapp"
+            >
+              Escríbeme por WhatsApp <Icon d={STROKE_ICONS.arrow} stroke size={16} />
+            </a>
+            <a href="#proyectos" className="btn btn-secondary">
+              Ver proyectos
             </a>
             <div className="social-row">
               <a
