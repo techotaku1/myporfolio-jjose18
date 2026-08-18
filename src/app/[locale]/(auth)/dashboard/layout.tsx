@@ -1,7 +1,7 @@
 import { SignOutButton } from '@clerk/nextjs';
 import { auth } from '@clerk/nextjs/server';
 import type { Metadata } from 'next';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { Link } from '@/libs/I18nNavigation';
 import { BaseTemplate } from '@/templates/BaseTemplate';
@@ -30,7 +30,6 @@ export default async function DashboardLayout(props: DashboardLayoutProps) {
   // deprecated in favor of protecting each layout/page directly.
   // https://clerk.com/docs/guides/development/upgrading/upgrade-guides/migrate-from-create-route-matcher
   await auth.protect({ unauthenticatedUrl: `/${locale}/sign-in` });
-  setRequestLocale(locale);
   const t = await getTranslations({
     locale,
     namespace: 'DashboardLayout',

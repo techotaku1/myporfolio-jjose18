@@ -1,6 +1,38 @@
 import type { MetadataRoute } from 'next';
 import { getBaseUrl } from '@/utils/Helpers';
 
+/**
+ * Crawlers used by AI answer engines to build and cite their search indexes.
+ * They are listed explicitly so a future restrictive rule for `*` never
+ * silently removes the site from AI-generated answers.
+ */
+const AI_SEARCH_CRAWLERS = [
+  'GPTBot',
+  'OAI-SearchBot',
+  'ChatGPT-User',
+  'ClaudeBot',
+  'Claude-User',
+  'Claude-SearchBot',
+  'PerplexityBot',
+  'Perplexity-User',
+  'Google-Extended',
+  'Applebot',
+  'Applebot-Extended',
+  'meta-externalagent',
+  'Amazonbot',
+  'Bytespider',
+  'DuckAssistBot',
+  'MistralAI-User',
+  'cohere-ai',
+  'YouBot',
+  'Diffbot',
+  'Timpibot',
+  'CCBot',
+];
+
+/** Paths that must stay out of every index, traditional or AI. */
+const DISALLOWED = ['/dashboard/', '/api/', '/sign-in', '/sign-up', '/fr/'];
+
 export default function robots(): MetadataRoute.Robots {
   const baseUrl = getBaseUrl();
 
@@ -8,8 +40,14 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow: '/',
-        disallow: ['/dashboard/', '/api/'],
+        // `/api/icon` stays crawlable: it serves the favicon referenced by the metadata.
+        allow: ['/', '/api/icon'],
+        disallow: DISALLOWED,
+      },
+      {
+        userAgent: AI_SEARCH_CRAWLERS,
+        allow: ['/', '/llms.txt', '/api/icon'],
+        disallow: DISALLOWED,
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,

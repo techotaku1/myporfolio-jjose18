@@ -1,17 +1,15 @@
 import type { Metadata } from 'next';
-import { setRequestLocale } from 'next-intl/server';
 import { PortfolioLanding } from '@/components/portfolio/PortfolioLanding';
+import { getBaseUrl } from '@/utils/Helpers';
 
-const BASE_URL = 'https://portfolio-josedavid.vercel.app';
+const BASE_URL = getBaseUrl();
 
-type PortfolioHomePageProps = {
-  params: Promise<{ locale: string }>;
-};
+const DESCRIPTION =
+  'Desarrollador Full-Stack e IA en Cali, Colombia. React, Next.js, TypeScript, Python y sistemas agénticos. Disponible para proyectos freelance.';
 
 export const metadata: Metadata = {
   title: 'Jose David Gonzalez — Full-Stack & IA Developer',
-  description:
-    'Desarrollador Full-Stack e IA en Cali, Colombia. Especializado en React, Next.js, TypeScript, Python y sistemas agénticos con IA. Disponible para proyectos freelance.',
+  description: DESCRIPTION,
   keywords: [
     'Jose David Gonzalez',
     'desarrollador full-stack',
@@ -33,28 +31,17 @@ export const metadata: Metadata = {
     canonical: BASE_URL,
   },
   openGraph: {
-    type: 'website',
+    type: 'profile',
     locale: 'es_CO',
     url: BASE_URL,
     siteName: 'Jose David Gonzalez — Portfolio',
     title: 'Jose David Gonzalez — Full-Stack & IA Developer',
-    description:
-      'Desarrollador Full-Stack e IA en Cali, Colombia. React, Next.js, TypeScript, Python y sistemas agénticos.',
-    images: [
-      {
-        url: `${BASE_URL}/api/icon?size=512`,
-        width: 512,
-        height: 512,
-        alt: 'Jose David Gonzalez',
-      },
-    ],
+    description: DESCRIPTION,
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'Jose David Gonzalez — Full-Stack & IA Developer',
-    description:
-      'Desarrollador Full-Stack e IA en Cali, Colombia. React, Next.js, TypeScript, Python y sistemas agénticos.',
-    images: [`${BASE_URL}/api/icon?size=512`],
+    description: DESCRIPTION,
   },
   robots: {
     index: true,
@@ -76,10 +63,11 @@ const jsonLd = {
       '@id': `${BASE_URL}/#person`,
       name: 'Jose David Gonzalez',
       url: BASE_URL,
-      image: `${BASE_URL}/api/icon?size=512`,
+      image: `${BASE_URL}/pic_profile_avatar.jpg`,
       jobTitle: 'Full-Stack & IA Developer',
       description:
         'Desarrollador Full-Stack especializado en React, Next.js, TypeScript, Python y sistemas agénticos con IA.',
+      worksFor: { '@type': 'Organization', name: 'Freelance' },
       address: {
         '@type': 'PostalAddress',
         addressLocality: 'Cali',
@@ -88,6 +76,21 @@ const jsonLd = {
       },
       email: 'jsdg1818@gmail.com',
       sameAs: ['https://github.com/techotaku1', 'https://www.linkedin.com/in/jjose18/'],
+      nationality: { '@type': 'Country', name: 'Colombia' },
+      knowsLanguage: [
+        { '@type': 'Language', name: 'Español', alternateName: 'es' },
+        { '@type': 'Language', name: 'Inglés', alternateName: 'en' },
+      ],
+      alumniOf: [
+        { '@type': 'EducationalOrganization', name: 'FCECEP' },
+        { '@type': 'EducationalOrganization', name: 'Instituto Ponao' },
+      ],
+      hasOccupation: {
+        '@type': 'Occupation',
+        name: 'Full-Stack & IA Developer',
+        occupationLocation: { '@type': 'City', name: 'Cali, Colombia' },
+        skills: 'React, Next.js, TypeScript, Python, FastAPI, sistemas agénticos con IA',
+      },
       knowsAbout: [
         'React',
         'Next.js',
@@ -108,13 +111,21 @@ const jsonLd = {
       author: { '@id': `${BASE_URL}/#person` },
       inLanguage: 'es-CO',
     },
+    {
+      '@type': 'ProfilePage',
+      '@id': `${BASE_URL}/#profilepage`,
+      url: BASE_URL,
+      name: 'Jose David Gonzalez — Full-Stack & IA Developer',
+      description: DESCRIPTION,
+      inLanguage: 'es-CO',
+      isPartOf: { '@id': `${BASE_URL}/#website` },
+      mainEntity: { '@id': `${BASE_URL}/#person` },
+      primaryImageOfPage: `${BASE_URL}/pic_profile_avatar.jpg`,
+    },
   ],
 };
 
-export default async function PortfolioHomePage(props: PortfolioHomePageProps) {
-  const { locale } = await props.params;
-  setRequestLocale(locale);
-
+export default function PortfolioHomePage() {
   return (
     <>
       <script

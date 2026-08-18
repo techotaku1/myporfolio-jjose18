@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
-import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { Env } from '@/libs/Env';
 import { routing } from '@/libs/I18nRouting';
+import { CONTENT_LANG } from '@/utils/AppConfig';
 import { getBaseUrl } from '@/utils/Helpers';
 import '@/styles/global.css';
 
@@ -12,6 +13,9 @@ export const metadata: Metadata = {
     default: 'Jose David Gonzalez — Full-Stack & IA Developer',
     template: '%s | Jose David Gonzalez',
   },
+  verification: Env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { google: Env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+    : undefined,
   icons: [
     { rel: 'icon', type: 'image/svg+xml', url: '/user-icon-base.svg' },
     { rel: 'icon', type: 'image/png', sizes: '32x32', url: '/api/icon?size=32' },
@@ -42,10 +46,8 @@ export default async function RootLayout(props: {
     notFound();
   }
 
-  setRequestLocale(locale);
-
   return (
-    <html lang={locale}>
+    <html lang={CONTENT_LANG}>
       <body>
         <NextIntlClientProvider>{props.children}</NextIntlClientProvider>
       </body>

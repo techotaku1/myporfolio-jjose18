@@ -1,4 +1,3 @@
-import { setRequestLocale } from 'next-intl/server';
 import { Inter_Tight, JetBrains_Mono, Space_Grotesk } from 'next/font/google';
 import '@/styles/portfolio.css';
 
@@ -23,13 +22,7 @@ const fontMono = JetBrains_Mono({
   variable: '--font-portfolio-mono',
 });
 
-export default async function PortfolioLayout(props: {
-  children: React.ReactNode;
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await props.params;
-  setRequestLocale(locale);
-
+export default function PortfolioLayout(props: { children: React.ReactNode }) {
   return (
     <div
       className={`portfolio-root ${fontDisplay.variable} ${fontSans.variable} ${fontMono.variable}`}

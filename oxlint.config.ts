@@ -4,8 +4,21 @@ import next from 'ultracite/oxlint/next';
 import react from 'ultracite/oxlint/react';
 import vitest from 'ultracite/oxlint/vitest';
 
+// oxlint 1.79 dropped the nursery rule `react/react-compiler`; its checks now
+// live in granular rules (`react/static-components`,
+// `react/no-unstable-nested-components`, `react/incompatible-library`) that the
+// preset below already enables. Ultracite 7.10.5 still references the old name,
+// and an unknown rule makes oxlint reject the whole configuration file. Drop the
+// dead reference until Ultracite ships a build targeting oxlint >= 1.79.
+const reactPreset = {
+  ...react,
+  rules: Object.fromEntries(
+    Object.entries(react.rules ?? {}).filter(([rule]) => rule !== 'react/react-compiler'),
+  ),
+};
+
 export default defineConfig({
-  extends: [core, react, next, vitest],
+  extends: [core, reactPreset, next, vitest],
   ignorePatterns: ['.agents/**', '.claude/**'],
   rules: {
     'no-warning-comments': 'off', // Allow TODO and FIXME comments
@@ -24,6 +37,13 @@ export default defineConfig({
     'typescript/prefer-regexp-exec': 'off', // Allow use of String#match
 
     'unicorn/filename-case': 'off', // Impossible to enforce consistent filename case due to multiple conventions
+
+    // Ultracite's preset demands arrow functions for named components, which
+    // contradicts this repo's convention: every component and every Next.js
+    // file-convention export is a `function` declaration, matching the Next.js
+    // documentation. Enforcing the preset would rewrite all 30 components with
+    // no behavioral gain.
+    'react/function-component-definition': 'off',
 
     'nextjs/no-img-element': 'off', // Portfolio renders local static SVG glyphs and satori (ImageResponse) markup; native <img> is correct here and next/image would require dangerouslyAllowSVG
 

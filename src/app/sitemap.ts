@@ -1,7 +1,14 @@
 import type { MetadataRoute } from 'next';
-import { routing } from '@/libs/I18nRouting';
-import { getBaseUrl, getI18nPath } from '@/utils/Helpers';
+import { getBaseUrl } from '@/utils/Helpers';
 
+/**
+ * Builds the XML sitemap.
+ *
+ * The public portfolio is published in a single language, so no `alternates`
+ * are emitted: advertising routing locales that serve the same Spanish copy
+ * would signal duplicate content to search engines.
+ * @returns The sitemap entries exposed at `/sitemap.xml`.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = getBaseUrl();
 
@@ -11,13 +18,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 1,
-      alternates: {
-        languages: Object.fromEntries(
-          routing.locales
-            .filter((locale) => locale !== routing.defaultLocale)
-            .map((locale) => [locale, `${baseUrl}${getI18nPath('', locale)}`]),
-        ),
-      },
     },
   ];
 }

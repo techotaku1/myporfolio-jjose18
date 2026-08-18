@@ -1,13 +1,18 @@
 import { Env } from '@/libs/Env';
 import { routing } from '@/libs/I18nRouting';
+import { SITE_URL } from '@/utils/AppConfig';
 
 /**
  * Resolves the public base URL of the application.
- * @returns The configured public app URL or the local development URL.
+ * @returns The configured public app URL, the canonical production origin, or the local development URL.
  */
 export const getBaseUrl = () => {
   if (Env.NEXT_PUBLIC_APP_URL) {
     return Env.NEXT_PUBLIC_APP_URL;
+  }
+
+  if (Env.NODE_ENV === 'production') {
+    return SITE_URL;
   }
 
   return 'http://localhost:3000';

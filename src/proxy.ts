@@ -24,6 +24,10 @@ const aj = arcjet.withRule(
     allow: [
       // See https://docs.arcjet.com/bot-protection/identifying-bots
       'CATEGORY:SEARCH_ENGINE', // Allow search engines
+      // Allow AI answer engines (GPTBot, ClaudeBot, PerplexityBot, …). Blocking
+      // them here would silently cancel the crawl permissions granted in
+      // `robots.ts` and remove the portfolio from AI-generated answers.
+      'CATEGORY:AI',
       'CATEGORY:PREVIEW', // Allow preview links to show OG images
       'CATEGORY:MONITOR', // Allow uptime monitoring services
     ],

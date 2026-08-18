@@ -1,5 +1,6 @@
 import { hasLocale } from 'next-intl';
 import { getRequestConfig } from 'next-intl/server';
+import { locale as localeParam } from 'next/root-params';
 import { routing } from './I18nRouting';
 
 // NextJS Boilerplate uses Crowdin as the localization software.
@@ -12,9 +13,12 @@ import { routing } from './I18nRouting';
 // 2. Run manually the workflow on GitHub Actions
 // 3. Every 24 hours at 5am, the workflow will run automatically
 
-export default getRequestConfig(async ({ requestLocale }) => {
-  // Typically corresponds to the `[locale]` segment
-  const requested = await requestLocale;
+export default getRequestConfig(async ({ locale: explicitLocale }) => {
+  // `explicitLocale` is only set when a caller overrides the segment, as in
+  // `getTranslations({locale: 'en'})`. Otherwise the `[locale]` root parameter
+  // is the source of truth: it is readable from any Server Component under the
+  // root layout, which is what replaces the deprecated `setRequestLocale` calls.
+  const requested = explicitLocale ?? (await localeParam());
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale;
 
   return {
