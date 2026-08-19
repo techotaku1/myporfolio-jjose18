@@ -9,6 +9,21 @@ const localePrefix: LocalePrefixMode = 'as-needed';
 export const SITE_URL = 'https://josedavid-portfolio.vercel.app';
 
 /**
+ * Google Search Console token for the URL-prefix property, issued by the
+ * "HTML tag" verification method.
+ *
+ * Hard-coded on purpose. The value is public — it ships in the page source of
+ * every response — so it is configuration, not a secret, and keeping it here
+ * removes the class of failure where the deployment carries the wrong token
+ * because an environment variable was set in the wrong place or the build that
+ * inlined it was never redeployed.
+ *
+ * The DNS record uses a different token and a `google-site-verification=`
+ * prefix. This constant holds the bare HTML-tag token only.
+ */
+export const GOOGLE_SITE_VERIFICATION = 'AGpNPOb2L1Z4p1pOdNGsInrVPMiVKBk020FAa0TxGV0';
+
+/**
  * Date the public copy last changed, in ISO form.
  *
  * Deliberately a constant rather than `new Date()`: deriving it from build time

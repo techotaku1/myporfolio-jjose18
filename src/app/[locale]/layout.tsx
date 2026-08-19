@@ -1,22 +1,10 @@
 import type { Metadata, Viewport } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
-import { Env } from '@/libs/Env';
 import { routing } from '@/libs/I18nRouting';
-import { CONTENT_LANG } from '@/utils/AppConfig';
+import { CONTENT_LANG, GOOGLE_SITE_VERIFICATION } from '@/utils/AppConfig';
 import { getBaseUrl } from '@/utils/Helpers';
 import '@/styles/global.css';
-
-/**
- * Search Console hands out the token twice in different shapes: the DNS record
- * is `google-site-verification=<token>`, while the HTML tag expects the bare
- * `<token>`. Pasting the DNS form into the env var renders a meta tag Google
- * silently rejects, so strip the prefix if it is present.
- */
-const googleVerification = Env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.replace(
-  /^google-site-verification=/u,
-  '',
-);
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
@@ -28,7 +16,7 @@ export const metadata: Metadata = {
   // is served without one.
   description:
     'Desarrollador Full-Stack en Cali, Colombia. Aplicaciones web a medida con React, Next.js y Python.',
-  verification: googleVerification ? { google: googleVerification } : undefined,
+  verification: { google: GOOGLE_SITE_VERIFICATION },
   icons: [
     { rel: 'icon', type: 'image/svg+xml', url: '/user-icon-base.svg' },
     { rel: 'icon', type: 'image/png', sizes: '32x32', url: '/api/icon?size=32' },
