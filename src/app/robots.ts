@@ -33,24 +33,10 @@ const AI_SEARCH_CRAWLERS = [
 /**
  * Paths that must stay out of every index, traditional or AI.
  *
- * Written without a trailing slash so each rule also matches the bare path:
- * `/dashboard/` would leave `/dashboard` itself crawlable. The wildcard entries
- * cover the locale-prefixed variants (`/fr/sign-in`), which the unprefixed
- * rules do not reach.
- *
- * `/fr` is deliberately absent. It serves the same Spanish copy as `/` and
- * already declares `/` as its canonical; disallowing it would stop crawlers
- * from ever reading that canonical, which is what consolidates the duplicate.
+ * Only `/api/` remains: the sign-in, sign-up and dashboard routes were removed
+ * with the rest of the boilerplate, so they now 404 and need no rule.
  */
-const DISALLOWED = [
-  '/dashboard',
-  '/api/',
-  '/sign-in',
-  '/sign-up',
-  '/*/dashboard',
-  '/*/sign-in',
-  '/*/sign-up',
-];
+const DISALLOWED = ['/api/'];
 
 export default function robots(): MetadataRoute.Robots {
   const baseUrl = getBaseUrl();

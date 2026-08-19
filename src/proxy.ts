@@ -1,20 +1,11 @@
 import { detectBot } from '@arcjet/next';
-import { clerkMiddleware } from '@clerk/nextjs/server';
 import createMiddleware from 'next-intl/middleware';
-import type { NextFetchEvent, NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import arcjet from '@/libs/Arcjet';
 import { routing } from './libs/I18nRouting';
 
 const handleI18nRouting = createMiddleware(routing);
-
-// Clerk's request context is only attached to the routes that actually need
-// it (auth pages + dashboard), since Clerk keyless mode doesn't work with
-// i18n on every other route. Auth PROTECTION itself lives in
-// `dashboard/layout.tsx` via `auth.protect()` — middleware-level route
-// matching for that purpose is deprecated. See:
-// https://clerk.com/docs/guides/development/upgrading/upgrade-guides/migrate-from-create-route-matcher
-const CLERK_ROUTE_PATTERN = /^\/(?:[^/]+\/)?(?:dashboard|sign-in|sign-up)(?:\/|$)/u;
 
 // Improve security with Arcjet
 const aj = arcjet.withRule(
@@ -34,7 +25,7 @@ const aj = arcjet.withRule(
   }),
 );
 
-export default async function proxy(request: NextRequest, event: NextFetchEvent) {
+export default async function proxy(request: NextRequest) {
   // Verify the request with Arcjet
   // Use `process.env` instead of Env to reduce bundle size in middleware
   if (process.env.ARCJET_KEY) {
@@ -43,12 +34,6 @@ export default async function proxy(request: NextRequest, event: NextFetchEvent)
     if (decision.isDenied()) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
-  }
-
-  if (CLERK_ROUTE_PATTERN.test(request.nextUrl.pathname)) {
-    // Match Clerk's documented middleware composition pattern, `return await` is not necessary.
-    // oxlint-disable-next-line typescript/return-await
-    return clerkMiddleware((_auth, req) => handleI18nRouting(req))(request, event);
   }
 
   return handleI18nRouting(request);
