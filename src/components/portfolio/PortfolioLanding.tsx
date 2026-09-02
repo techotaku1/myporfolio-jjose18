@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { AiSection } from './AiSection';
+import { Availability } from './Availability';
 import { Contact } from './Contact';
 import { Experience } from './Experience';
 import { Footer } from './Footer';
@@ -52,6 +53,7 @@ export function PortfolioLanding() {
           <AiSection />
           <Skills />
           <Experience />
+          <Availability />
           <Contact />
         </main>
         <Footer />
