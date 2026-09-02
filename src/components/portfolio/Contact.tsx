@@ -40,21 +40,23 @@ export function Contact() {
 
     setSending(true);
     setFailed(false);
-    try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
-      if (!res.ok) {
-        throw new Error('request failed');
-      }
+
+    // Resolved as a promise chain rather than try/catch/finally: the React
+    // Compiler cannot lower a `finally` clause or a `throw` inside `try`.
+    const delivered = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form),
+    })
+      .then((res) => res.ok)
+      .catch(() => false);
+
+    if (delivered) {
       setSent(true);
-    } catch {
+    } else {
       setFailed(true);
-    } finally {
-      setSending(false);
     }
+    setSending(false);
   };
 
   return (
