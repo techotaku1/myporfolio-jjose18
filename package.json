@@ -24,10 +24,7 @@
     "db-server:memory": "pglite-server -m 100 --run \"node scripts/db-migrate.mjs\"",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "dotenv -c -- drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio",
-    "storybook": "storybook dev -p 6006",
-    "storybook:test": "vitest run --config .storybook/vitest.config.ts",
-    "build-storybook": "storybook build"
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@arcjet/next": "^1.11.0",
@@ -57,10 +54,6 @@
     "@next/bundle-analyzer": "^16.3.4",
     "@playwright/test": "^1.62.1",
     "@spotlightjs/spotlight": "^4.11.8",
-    "@storybook/addon-a11y": "^10.6.0",
-    "@storybook/addon-docs": "^10.6.0",
-    "@storybook/addon-vitest": "^10.6.0",
-    "@storybook/nextjs-vite": "^10.6.0",
     "@swc/helpers": "^0.5.23",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^26.4.1",
@@ -84,7 +77,6 @@
     "oxlint-tsgolint": "^7.0.2001",
     "rimraf": "^6.1.3",
     "semantic-release": "^25.0.9",
-    "storybook": "^10.6.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2",
     "ultracite": "^7.10.7",

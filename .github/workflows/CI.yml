@@ -118,28 +118,6 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  storybook:
-    strategy:
-      matrix:
-        node-version: [24.x]
-
-    name: Run Storybook
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Set up Node.js environment
-        uses: ./.github/actions/setup-project
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Run storybook tests
-        uses: docker://mcr.microsoft.com/playwright:v1.60.0
-        with:
-          args: npm run storybook:test
-
   e2e:
     strategy:
       matrix:
@@ -175,7 +153,6 @@ jobs:
         with:
           playwright: true
           exitOnceUploaded: true # Speed up by skipping the build results
-          outputDir: storybook-static
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
 
       - name: Upload test results
