@@ -6,6 +6,14 @@ on:
   pull_request:
     branches: [main]
 
+# Every job ends up loading src/libs/Env.ts, which requires DATABASE_URL to be a
+# non-empty string, and the repository tracks no .env for CI to fall back on.
+# This points at the in-memory PGlite server that the build and E2E jobs start
+# on the default Postgres port; the jobs that never open a connection need the
+# value only to pass validation. PGlite accepts any credentials.
+env:
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+
 jobs:
   build:
     strategy:
@@ -157,8 +165,6 @@ jobs:
         uses: docker://mcr.microsoft.com/playwright:v1.60.0
         with:
           args: sh -c "HOME=/root npm run test:e2e" # Set HOME to /root to avoid Playwright error with Firebox
-        env:
-          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
 
       - name: Fix test results permission # Give permissions to test results needed by Chromatic
         run: |
