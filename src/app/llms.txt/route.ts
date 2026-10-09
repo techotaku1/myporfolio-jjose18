@@ -2,8 +2,6 @@ import { PHONE_E164, SERVICES, WHATSAPP_URL } from '@/components/portfolio/const
 import { EDU, EXPERIENCE, PROJECTS, SKILLS } from '@/components/portfolio/data';
 import { getBaseUrl } from '@/utils/Helpers';
 
-export const dynamic = 'force-static';
-
 /**
  * Serves the `llms.txt` file consumed by AI answer engines.
  *

@@ -1,6 +1,11 @@
 import { Inter_Tight, JetBrains_Mono, Space_Grotesk } from 'next/font/google';
 import '@/styles/portfolio.css';
 
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 const fontDisplay = Inter_Tight({
   subsets: ['latin'],
   weight: ['600', '700', '800'],
