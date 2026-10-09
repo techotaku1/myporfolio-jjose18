@@ -10,6 +10,12 @@ export const PROFILE = {
   location: 'CALI · VALLE DEL CAUCA · CO',
 } as const;
 
+/** Public CV served from `public/`, plus the filename the browser saves it as. */
+export const CV = {
+  href: '/cv-jose-david-gonzalez.pdf',
+  filename: 'Hoja de vida - Jose David Gonzalez.pdf',
+} as const;
+
 /** Prefilled WhatsApp text, so the first message already states the intent. */
 const WHATSAPP_GREETING = 'Hola Jose David, vi tu portafolio y quiero cotizar una aplicación web.';
 

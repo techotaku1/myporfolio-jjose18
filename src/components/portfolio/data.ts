@@ -13,6 +13,7 @@ export const BRAND_ICONS = {
 /** Stroke (outline) icon paths. */
 export const STROKE_ICONS = {
   arrow: 'M5 12h14M13 6l6 6-6 6',
+  download: 'M12 4v11M7 10l5 5 5-5M5 20h14',
   ext: 'M14 4h6v6M20 4 10 14M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6',
   code: 'm16 18 6-6-6-6M8 6l-6 6 6 6',
   db: 'M12 3c4.4 0 8 1.34 8 3s-3.6 3-8 3-8-1.34-8-3 3.6-3 8-3ZM4 6v12c0 1.66 3.6 3 8 3s8-1.34 8-3V6M4 12c0 1.66 3.6 3 8 3s8-1.34 8-3',

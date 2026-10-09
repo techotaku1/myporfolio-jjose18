@@ -43,7 +43,6 @@
   },
 
   // Enable eslint for all supported languages
-  "eslint.runtime": "C:\\Users\\Usuario\\AppData\\Roaming\\fnm\\aliases\\default\\node.exe",
   "eslint.validate": [
     "javascript",
     "javascriptreact",

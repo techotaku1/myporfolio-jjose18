@@ -1,4 +1,4 @@
-import { PROFILE } from './constants';
+import { CV, PROFILE } from './constants';
 
 export function Footer() {
   return (
@@ -13,6 +13,9 @@ export function Footer() {
             LINKEDIN
           </a>
           <a href={`mailto:${PROFILE.email}`}>EMAIL</a>
+          <a href={CV.href} download={CV.filename}>
+            CV
+          </a>
         </div>
       </div>
     </footer>

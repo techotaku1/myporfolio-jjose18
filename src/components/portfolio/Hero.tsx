@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Fragment } from 'react';
-import { HEADLINE, PROFILE, WHATSAPP_URL } from './constants';
+import { CV, HEADLINE, PROFILE, WHATSAPP_URL } from './constants';
 import { BRAND_ICONS, STROKE_ICONS } from './data';
 import { Icon } from './Icon';
 
@@ -49,6 +49,14 @@ export function Hero() {
             </a>
             <a href="#proyectos" className="btn btn-secondary">
               Ver proyectos
+            </a>
+            <a
+              href={CV.href}
+              download={CV.filename}
+              className="btn btn-secondary"
+              data-analytics="hero-cv"
+            >
+              Descargar CV <Icon d={STROKE_ICONS.download} stroke size={16} />
             </a>
             <div className="social-row">
               <a
