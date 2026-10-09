@@ -35,9 +35,6 @@ if (!process.env.NEXT_PUBLIC_SENTRY_DISABLED) {
     // Define how likely Replay events are sampled when an error occurs.
     replaysOnErrorSampleRate: 1,
 
-    // Enable logs to be sent to Sentry
-    enableLogs: true,
-
     // Setting this option to true will print useful information to the console while you're setting up Sentry.
     debug: false,
   });

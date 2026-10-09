@@ -72,11 +72,11 @@ if (!process.env.NEXT_PUBLIC_SENTRY_DISABLED) {
     // side errors will fail.
     tunnelRoute: '/monitoring',
 
-    webpack: {
-      reactComponentAnnotation: {
-        enabled: true,
-      },
+    reactComponentAnnotation: {
+      enabled: true,
+    },
 
+    webpack: {
       // Tree-shake Sentry logger statements to reduce bundle size
       treeshake: {
         removeDebugLogging: true,

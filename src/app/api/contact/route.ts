@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+import { createTransport } from 'nodemailer';
 import * as z from 'zod';
 import { Env } from '@/libs/Env';
 
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
   const { name, email, msg } = parsed.data;
 
-  const transporter = nodemailer.createTransport({
+  const transporter = createTransport({
     service: 'gmail',
     auth: {
       user: PORTFOLIO_EMAIL,
