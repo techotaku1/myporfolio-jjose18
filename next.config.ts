@@ -15,7 +15,16 @@ const baseConfig: NextConfig = {
   // not resolve under Turbopack. The proxy runs in the Node.js runtime, so
   // opt these packages out of bundling and let Node `require` them natively.
   serverExternalPackages: ['@arcjet/next', 'arcjet', '@arcjet/analyze', '@arcjet/analyze-wasm'],
-  reactCompiler: process.env.NODE_ENV === 'production', // Keep the development environment fast
+  reactCompiler: true,
+  typedRoutes: true,
+  // Agent instructions live only in CLAUDE.md; 16.4 would otherwise create AGENTS.md on `next dev`.
+  agentRules: false,
+  experimental: {
+    turbopackRustReactCompiler: true,
+    turbopackGc: true,
+    turbopackLazyDynamicImports: true,
+    agentUpgrade: 'latest',
+  },
   logging: {
     browserToTerminal: process.env.BROWSER_TO_TERMINAL_DISABLED !== 'true',
   },
