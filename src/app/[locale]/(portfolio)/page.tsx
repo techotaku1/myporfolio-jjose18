@@ -3,11 +3,6 @@ import { PHONE_E164, SERVICES, WHATSAPP_URL } from '@/components/portfolio/const
 import { PortfolioLanding } from '@/components/portfolio/PortfolioLanding';
 import { getBaseUrl } from '@/utils/Helpers';
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
-
 const BASE_URL = getBaseUrl();
 
 const DESCRIPTION =
