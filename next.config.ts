@@ -16,6 +16,7 @@ const baseConfig: NextConfig = {
   // opt these packages out of bundling and let Node `require` them natively.
   serverExternalPackages: ['@arcjet/next', 'arcjet', '@arcjet/analyze', '@arcjet/analyze-wasm'],
   cacheComponents: true,
+  partialPrefetching: true,
   reactCompiler: true,
   typedRoutes: true,
   // Agent instructions live only in CLAUDE.md; 16.4 would otherwise create AGENTS.md on `next dev`.
