@@ -83,7 +83,7 @@ export function Contact() {
           </a>
         </div>
         {sent ? (
-          <div className="form-ok reveal">SEÑAL ENVIADA // Gracias, te responderé pronto.</div>
+          <div className="form-ok">SEÑAL ENVIADA // Gracias, te responderé pronto.</div>
         ) : (
           <form
             className="form-row reveal"

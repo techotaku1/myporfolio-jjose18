@@ -19,12 +19,8 @@ export function Projects() {
           </p>
         </div>
         <div className="grid-cards">
-          {PROJECTS.map((p, i) => (
-            <article
-              className="card reveal"
-              key={p.title}
-              style={{ transitionDelay: `${i * 0.08}s` }}
-            >
+          {PROJECTS.map((p) => (
+            <article className="card reveal" key={p.title}>
               <div className="card-img">
                 <ProjectArt type={p.art} />
               </div>

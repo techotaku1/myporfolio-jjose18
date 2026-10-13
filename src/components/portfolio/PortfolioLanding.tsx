@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useRef } from 'react';
 import { AiSection } from './AiSection';
 import { Availability } from './Availability';
 import { Contact } from './Contact';
@@ -11,41 +11,17 @@ import { HexagonBackground } from './HexagonBackground';
 import { Nav } from './Nav';
 import { Projects } from './Projects';
 import { Skills } from './Skills';
+import { usePortfolioMotion } from './usePortfolioMotion';
 import { WhatsAppButton } from './WhatsAppButton';
 
-/** Reveals elements with the `.reveal` class as they scroll into view.
- * Syncs with the DOM via IntersectionObserver — a genuine external system. */
-function useReveal() {
-  useEffect(() => {
-    const els = document.querySelectorAll('.reveal');
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in');
-            io.unobserve(entry.target);
-          }
-        }
-      },
-      { threshold: 0.12 },
-    );
-
-    for (const el of els) {
-      io.observe(el);
-    }
-    return () => {
-      io.disconnect();
-    };
-  }, []);
-}
-
 export function PortfolioLanding() {
-  useReveal();
+  const root = useRef<HTMLDivElement>(null);
+  usePortfolioMotion(root);
 
   return (
     <>
       <HexagonBackground />
-      <div className="hbg-content">
+      <div className="hbg-content" ref={root}>
         <Nav />
         <main>
           <Hero />
