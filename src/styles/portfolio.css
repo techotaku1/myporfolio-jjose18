@@ -539,6 +539,13 @@ html {
   display: block;
   height: 100%;
   background: var(--primary);
+  transform-origin: left center;
+}
+/* Fixed width so the count-up never shifts the row while digits are added. */
+.portfolio-root .console .row [data-count] {
+  min-width: 3ch;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 .portfolio-root .bigstat {
   text-align: right;
@@ -1131,6 +1138,32 @@ html {
     transform: translateY(24px);
     /* Keep hover transitions from lagging behind GSAP's per-frame transform updates. */
     transition: none;
+  }
+
+  /* Hero entrance start state. The h1 (LCP candidate) only moves; it never fades. */
+  .portfolio-root .hero .enter:not(.in) {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: none;
+  }
+  .portfolio-root .hero h1:not(.in) {
+    transform: translateY(0.18em);
+  }
+  .portfolio-root .console .bar > i:not(.in) {
+    transform: scaleX(0);
+  }
+  /* Failsafe: when the entrance has not run after 3s (slow or failed JS), settle on
+     the final state. It eases from whatever GSAP has set, so it never flashes. */
+  .portfolio-root .hero .enter:not(.in),
+  .portfolio-root .hero h1:not(.in),
+  .portfolio-root .console .bar > i:not(.in) {
+    animation: enter-failsafe 0.6s ease-out 3s forwards;
+  }
+}
+@keyframes enter-failsafe {
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 

@@ -10,7 +10,7 @@ export function Hero() {
       <div className="hero-bg" />
       <div className="wrap hero-grid">
         <div>
-          <div className="hero-intro">
+          <div className="hero-intro enter">
             <div className="avatar">
               <span className="avatar-ring" aria-hidden="true" />
               <Image
@@ -32,12 +32,12 @@ export function Hero() {
               </Fragment>
             ))}
           </h1>
-          <p className="lead">
+          <p className="lead enter">
             Tecnólogo en Sistemas y Desarrollador Full-Stack en Cali, Colombia. Construyo
             aplicaciones web a medida con React, Next.js y FastAPI — y desarrollo de forma nativa
             con IA y sistemas agénticos. Disponible para proyectos freelance.
           </p>
-          <div className="hero-actions">
+          <div className="hero-actions enter">
             <a
               href={WHATSAPP_URL}
               className="btn"
@@ -84,7 +84,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="console" aria-hidden="true">
+        <div className="console enter" aria-hidden="true">
           <span className="corner tl" />
           <span className="corner tr" />
           <span className="corner bl" />
@@ -99,25 +99,25 @@ export function Hero() {
             </div>
             <div className="row" style={{ marginBottom: '1rem' }}>
               <span>FRONTEND_LOAD</span>
-              <span>92%</span>
+              <span data-count>92%</span>
             </div>
             <div className="bar">
               <i style={{ width: '78%' }} />
             </div>
             <div className="row" style={{ marginBottom: '1rem' }}>
               <span>BACKEND_LOAD</span>
-              <span>78%</span>
+              <span data-count>78%</span>
             </div>
             <div className="bar">
               <i style={{ width: '96%' }} />
             </div>
             <div className="row">
               <span>AI_WORKFLOW</span>
-              <span>96%</span>
+              <span data-count>96%</span>
             </div>
           </div>
           <div className="bigstat">
-            <b>03</b>
+            <b data-count>03</b>
             <span>STACK_PRINCIPAL: NEXT · FASTAPI · IA</span>
           </div>
         </div>

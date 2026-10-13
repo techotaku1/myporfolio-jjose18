@@ -36,9 +36,11 @@ The reference relies on scroll-linked choreography that `IntersectionObserver` c
   - Route: direct inline. Trigger evidence: one non-trivial new file (the hook); the CSS, `PortfolioLanding.tsx`, `Projects.tsx` and `Contact.tsx` edits are mechanical.
   - Test-first exception: scroll-triggered DOM behavior needs a real browser and scroll; proof is visual verification in the Browser pane.
   - Extra: removed `reveal` from the contact `form-ok` message, which mounts after the reveal setup and stayed at opacity 0 (existing bug).
-- [ ] T3 — Hero entrance timeline (tagline, h1 by transform, lead, actions, console), console bars fill from 0, count-up for 92/78/96/03.
-  - Route: delegated writer. Trigger evidence: new pure helper + test, `Hero.tsx`, motion hook, CSS.
+- [x] T3 — Hero entrance timeline (tagline, h1 by transform, lead, actions, console), console bars fill from 0, count-up for 92/78/96/03.
+  - Route: direct inline (planned as a delegated writer). The parent already held the hook, CSS and `Hero.tsx` context, and each edit was small; a writer would have re-read the same files.
   - Test-first: `parseCountTarget` and `formatCount` in `src/components/portfolio/motion.ts` with `motion.test.ts` (node), RED before GREEN.
+  - Start state lives in CSS (`.enter`, `h1`, bars) under the scripting/no-preference query, and every tween goes `to` the final state, so hydration never flashes. A CSS failsafe (`enter-failsafe`, 3s delay) settles the hero on its final state when JavaScript is slow or broken; CSS animations override inline styles, so it also wins over a half-run timeline.
+  - Count-up writes the span text and restores the original labels in the `matchMedia` cleanup. Count spans get `min-width: 3ch` and tabular figures so the row never shifts.
 - [ ] T4 — SplitText reveals for `.sec-head`: eyebrow, `h2.display` by words, `.rule` scaleX, sub paragraph.
   - Route: delegated writer. Trigger evidence: motion hook + CSS, SplitText accessibility handling.
   - Test-first exception: text splitting is DOM- and font-dependent; proof is visual verification plus checking the accessible name of each `h2`.
@@ -81,9 +83,9 @@ Gate before each work-unit commit (placeholder `DATABASE_URL` only on the comman
 
 | Task | Status | Commit |
 | ---- | ------ | ------ |
-| T1 | merged into T2 | — |
-| T2 | done | pending |
-| T3 | pending | — |
+| T1 | merged into T2 | `8f690de` |
+| T2 | done | `8f690de` |
+| T3 | done | recorded with T4 |
 | T4 | pending | — |
 | T5 | pending | — |
 | T6 | pending | — |
@@ -96,7 +98,9 @@ Gate before each work-unit commit (placeholder `DATABASE_URL` only on the comman
 
 - 2026-10-13 (T2): Windows "Animation effects" is off on this machine (`SPI_GETCLIENTAREAANIMATION` = False), so Chromium reports `prefers-reduced-motion: reduce`. Reduced-motion path verified in the Browser pane: 36 `.reveal` elements, all at computed opacity 1, `(scripting: enabled)` matches, no overlay.
 - 2026-10-13 (T2): the no-preference path could not be exercised in-page (patching `window.matchMedia` does not re-run `useGSAP` on hot updates). Pending for T7 with Windows animation effects enabled.
+- 2026-10-13 (T3): RED observed (`motion.test.ts` could not resolve `./motion`), then GREEN 7/7. Gate: lint, `check:types`, `check:deps` pass; `npm test` 9/9; `check:i18n` fails only on the boilerplate baseline.
+- 2026-10-13 (T3): reduced-motion path verified in the Browser pane: hero `.enter` blocks and `h1` at opacity 1 with no transform, bars at `transform: none`, stat labels intact (`92%`, `78%`, `96%`, `03`), no app console errors (only Spotlight `:8969` refused, which this preview does not run). The no-preference timeline stays pending for T7; `npm run test:e2e` would start a second `next dev` beside the running preview.
 
 ## Next step
 
-T3: hero entrance timeline, bar fill and count-up, test-first with `parseCountTarget` and `formatCount`.
+T4: SplitText reveals for `.sec-head`; register `SplitText` in `src/libs/Gsap.ts`.
