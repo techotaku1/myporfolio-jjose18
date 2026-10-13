@@ -13,7 +13,7 @@ export function Skills() {
   return (
     <section className="sec divider" id="stack">
       <div className="wrap">
-        <div className="sec-head reveal">
+        <div className="sec-head">
           <div>
             <span className="eyebrow">HERRAMIENTAS_DIARIAS</span>
             <h2 className="display" style={{ marginTop: '0.75rem' }}>

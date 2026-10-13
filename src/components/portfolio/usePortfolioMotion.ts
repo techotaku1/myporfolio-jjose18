@@ -1,5 +1,5 @@
 import type { RefObject } from 'react';
-import { gsap, ScrollTrigger, useGSAP } from '@/libs/Gsap';
+import { gsap, ScrollTrigger, SplitText, useGSAP } from '@/libs/Gsap';
 import { formatCount, parseCountTarget } from './motion';
 
 const MOTION_OK = '(prefers-reduced-motion: no-preference)';
@@ -73,6 +73,52 @@ function playHeroEntrance(scope: HTMLElement) {
 }
 
 /**
+ * Reveals each section heading as it scrolls into view: the eyebrow rises, the title's words
+ * slide up out of their masks, the rule draws from the left and the summary follows.
+ * CSS holds the start state, and the split is reverted once the heading settles.
+ * @param scope - Element that contains the section headings.
+ */
+function revealSectionHeads(scope: HTMLElement) {
+  for (const head of gsap.utils.toArray<HTMLElement>('.sec-head', scope)) {
+    const q = gsap.utils.selector(head);
+    const [title] = q('h2');
+
+    if (!title) {
+      continue;
+    }
+
+    // Spans keep the heading's phrasing-only content model; `aria: 'auto'` (the default)
+    // labels the h2 with its full text and hides the word pieces while it is split.
+    const split = SplitText.create(title, {
+      type: 'words',
+      mask: 'words',
+      wordsClass: 'split-word',
+      tag: 'span',
+    });
+    const parts = [...q('.eyebrow'), ...q('.rule'), ...q('.sub')];
+
+    const tl = gsap.timeline({
+      defaults: { duration: 0.8, ease: 'power3.out' },
+      scrollTrigger: { trigger: head, start: 'top 85%', once: true },
+      onComplete: () => {
+        head.classList.add('in');
+        gsap.set([title, ...parts], { clearProps: 'opacity,transform' });
+        split.revert();
+      },
+    });
+
+    tl.to(q('.eyebrow'), { opacity: 1, y: 0 })
+      .from(split.words, { yPercent: 140, duration: 1, ease: 'expo.out', stagger: 0.08 }, '<0.1')
+      .to(q('.rule'), { scaleX: 1, duration: 0.9, ease: 'power2.inOut' }, '<0.25')
+      .to(q('.sub'), { opacity: 1, y: 0 }, '<0.1');
+
+    // The `from` tween has already pushed the words below their masks, so showing the
+    // title now reveals nothing until the timeline plays.
+    gsap.set(title, { opacity: 1 });
+  }
+}
+
+/**
  * Runs the page's scroll-driven motion inside `root`, only when the user allows motion.
  * @param root - Element that scopes every selector and owns the animations' cleanup.
  */
@@ -90,6 +136,7 @@ export function usePortfolioMotion(root: RefObject<HTMLElement | null>) {
       mm.add(MOTION_OK, () => {
         // Created first: the hero sits at the top of the page.
         const restoreHero = playHeroEntrance(scope);
+        revealSectionHeads(scope);
 
         // CSS hides `.reveal:not(.in)` under the same query, so content stays visible
         // without JavaScript or with reduced motion.

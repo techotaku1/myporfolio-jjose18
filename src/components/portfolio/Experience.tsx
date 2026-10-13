@@ -4,7 +4,7 @@ export function Experience() {
   return (
     <section className="sec divider" id="experiencia">
       <div className="wrap">
-        <div className="sec-head reveal">
+        <div className="sec-head">
           <div>
             <span className="eyebrow">EXPERIENCIA</span>
             <h2 className="display" style={{ marginTop: '0.75rem' }}>

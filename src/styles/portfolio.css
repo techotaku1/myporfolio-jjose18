@@ -591,6 +591,14 @@ html {
   border-radius: 2px;
   background: linear-gradient(90deg, var(--primary), transparent);
   box-shadow: 0 0 18px var(--primary-soft);
+  transform-origin: left center;
+}
+/* SplitText word masks (heading reveal). Padding widens the clip box past the tight
+   line-height and negative letter-spacing so accents, underscores and the last glyph
+   are not cut; the matching negative margin keeps the layout unchanged. */
+.portfolio-root .sec-head .split-word-mask {
+  padding: 0.2em 0.1em;
+  margin: -0.2em -0.1em;
 }
 @media (min-width: 760px) {
   .portfolio-root .sec-head {
@@ -1150,6 +1158,18 @@ html {
     transform: translateY(0.18em);
   }
   .portfolio-root .console .bar > i:not(.in) {
+    transform: scaleX(0);
+  }
+
+  /* Section heading start state. The title shows once its words sit below their masks. */
+  .portfolio-root .sec-head:not(.in) :is(.eyebrow, .sub) {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  .portfolio-root .sec-head:not(.in) h2 {
+    opacity: 0;
+  }
+  .portfolio-root .sec-head:not(.in) .rule {
     transform: scaleX(0);
   }
   /* Failsafe: when the entrance has not run after 3s (slow or failed JS), settle on

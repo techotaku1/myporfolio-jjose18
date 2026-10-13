@@ -41,9 +41,12 @@ The reference relies on scroll-linked choreography that `IntersectionObserver` c
   - Test-first: `parseCountTarget` and `formatCount` in `src/components/portfolio/motion.ts` with `motion.test.ts` (node), RED before GREEN.
   - Start state lives in CSS (`.enter`, `h1`, bars) under the scripting/no-preference query, and every tween goes `to` the final state, so hydration never flashes. A CSS failsafe (`enter-failsafe`, 3s delay) settles the hero on its final state when JavaScript is slow or broken; CSS animations override inline styles, so it also wins over a half-run timeline.
   - Count-up writes the span text and restores the original labels in the `matchMedia` cleanup. Count spans get `min-width: 3ch` and tabular figures so the row never shifts.
-- [ ] T4 — SplitText reveals for `.sec-head`: eyebrow, `h2.display` by words, `.rule` scaleX, sub paragraph.
-  - Route: delegated writer. Trigger evidence: motion hook + CSS, SplitText accessibility handling.
+- [x] T4 — SplitText reveals for `.sec-head`: eyebrow, `h2.display` by words, `.rule` scaleX, sub paragraph.
+  - Route: direct inline (planned as a delegated writer). One new function in the hook, a plugin registration and CSS; the five `.sec-head` markup edits are a mechanical class removal.
   - Test-first exception: text splitting is DOM- and font-dependent; proof is visual verification plus checking the accessible name of each `h2`.
+  - `.sec-head` no longer carries `reveal`; each head gets its own `once` timeline. Words split into `span`s (valid inside `h2`) with `mask: 'words'`; `aria: 'auto'` labels the `h2` while split, and the split is reverted on complete, so the settled DOM is the original markup.
+  - Start state in CSS: eyebrow and sub hidden and lowered, `h2` at opacity 0, rule at `scaleX(0)`. The title is shown only after the `from` tween has pushed its words below their masks, so nothing flashes. Mask padding with a matching negative margin keeps accents, underscores and the last glyph (negative letter-spacing) from being clipped.
+  - No failsafe yet for below-the-fold heads, same as `.reveal`; reviewed in T7.
 - [ ] T5 — Reshape `AiSection` into a pinned section with scroll-driven tabs 01–0N (left list, right panel) on desktop; tabs clickable and keyboard accessible; static grid on mobile and reduced motion.
   - Route: delegated writer with `frontend-design`. Trigger evidence: reshaping a major component (`AiSection.tsx`, CSS, motion helpers, tests).
   - Test-first: `progressToIndex` and `indexToProgress` in `motion.ts` with `motion.test.ts`, RED before GREEN.
@@ -85,8 +88,8 @@ Gate before each work-unit commit (placeholder `DATABASE_URL` only on the comman
 | ---- | ------ | ------ |
 | T1 | merged into T2 | `8f690de` |
 | T2 | done | `8f690de` |
-| T3 | done | recorded with T4 |
-| T4 | pending | — |
+| T3 | done | `4684469` |
+| T4 | done | see `git log` (recorded with T5) |
 | T5 | pending | — |
 | T6 | pending | — |
 | T7 | pending | — |
@@ -101,6 +104,8 @@ Gate before each work-unit commit (placeholder `DATABASE_URL` only on the comman
 - 2026-10-13 (T3): RED observed (`motion.test.ts` could not resolve `./motion`), then GREEN 7/7. Gate: lint, `check:types`, `check:deps` pass; `npm test` 9/9; `check:i18n` fails only on the boilerplate baseline.
 - 2026-10-13 (T3): reduced-motion path verified in the Browser pane: hero `.enter` blocks and `h1` at opacity 1 with no transform, bars at `transform: none`, stat labels intact (`92%`, `78%`, `96%`, `03`), no app console errors (only Spotlight `:8969` refused, which this preview does not run). The no-preference timeline stays pending for T7; `npm run test:e2e` would start a second `next dev` beside the running preview.
 
+- 2026-10-13 (T4): gate: lint, `check:types`, `check:deps` pass; `npm test` 9/9; `check:i18n` fails only on the 48-row boilerplate baseline. Reduced-motion path verified in the Browser pane: 5 `.sec-head` titles with their original text and no leftover `aria-label` or split spans, eyebrow/title/sub at opacity 1, rule at `transform: none`; `GET /` 200 with no new server or console errors. The no-preference timeline stays pending for T7.
+
 ## Next step
 
-T4: SplitText reveals for `.sec-head`; register `SplitText` in `src/libs/Gsap.ts`.
+T5: pinned `AiSection` tabs on desktop; write `progressToIndex`/`indexToProgress` tests first (RED), then load `frontend-design`.
