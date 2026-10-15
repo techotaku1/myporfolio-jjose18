@@ -2,12 +2,11 @@
 
 import { Canvas, extend, useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useLayoutEffect, useRef } from 'react';
-import type { InstancedMesh } from 'three';
+import type { InstancedMesh, Mesh } from 'three';
 import { Matrix4, PCFShadowMap } from 'three';
 import { MeshBasicNodeMaterial, WebGPURenderer } from 'three/webgpu';
 import {
-  CLOUD_COLOR_NODE,
-  CLOUD_OPACITY_NODE,
+  createCloudNodes,
   MOON_COLOR_NODE,
   MOON_HALO_COLOR_NODE,
   MOON_HALO_OPACITY_NODE,
@@ -20,7 +19,16 @@ import {
 type CloudLayer = {
   position: [number, number, number];
   scale: [number, number, number];
+  /** Seeds this bank's noise, so no two banks share a silhouette. */
+  seed: number;
+  /** World units per second along x. Sign picks the direction; nearer banks
+   * travel faster, which is the parallax half of the depth cue. */
+  drift: number;
 };
+
+/** How far a bank travels before it wraps back to the other side. Well past
+ * the frustum edge at cloud depth, so a wrap never happens in view. */
+const CLOUD_WRAP = 240;
 
 /** Registers the node material as JSX so the module-scope graphs ride in as props. */
 const NodeMaterial = extend(MeshBasicNodeMaterial);
@@ -33,21 +41,31 @@ const RAIN_COUNT = 1100;
 const MOON_POSITION: [number, number, number] = [38, 41, -95];
 const MOON_RADIUS = 9;
 
-/** Cloud banks, placed by hand so they layer around the moon at several depths. */
+/** Cloud banks, placed by hand so they layer around the moon at several depths.
+ * Drift signs alternate so the sky never reads as one sheet sliding sideways. */
 const CLOUD_LAYERS: CloudLayer[] = [
-  { position: [-34, 30, -62], scale: [96, 34, 1] },
-  { position: [28, 35, -74], scale: [120, 40, 1] },
-  { position: [6, 26, -44], scale: [72, 24, 1] },
-  { position: [-52, 39, -88], scale: [110, 38, 1] },
-  { position: [48, 28, -36], scale: [66, 22, 1] },
-  { position: [0, 42, -104], scale: [160, 46, 1] },
-  { position: [44, 46, -72], scale: [88, 30, 1] },
-  { position: [-18, 48, -82], scale: [104, 32, 1] },
-  { position: [62, 36, -58], scale: [78, 26, 1] },
-  { position: [-66, 28, -50], scale: [84, 28, 1] },
-  { position: [20, 52, -96], scale: [130, 36, 1] },
-  { position: [-40, 22, -40], scale: [70, 22, 1] },
+  { position: [48, 28, -36], scale: [66, 22, 1], seed: 0.17, drift: 1.9 },
+  { position: [-40, 22, -40], scale: [70, 22, 1], seed: 1.43, drift: -1.8 },
+  { position: [6, 26, -44], scale: [72, 24, 1], seed: 2.71, drift: 1.7 },
+  { position: [-66, 28, -50], scale: [84, 28, 1], seed: 3.95, drift: -1.5 },
+  { position: [62, 36, -58], scale: [78, 26, 1], seed: 5.28, drift: 1.3 },
+  { position: [-34, 30, -62], scale: [96, 34, 1], seed: 6.64, drift: -1.2 },
+  { position: [44, 46, -72], scale: [88, 30, 1], seed: 7.81, drift: 1 },
+  { position: [28, 35, -74], scale: [120, 40, 1], seed: 9.06, drift: -0.95 },
+  { position: [-18, 48, -82], scale: [104, 32, 1], seed: 10.32, drift: 0.8 },
+  { position: [-52, 39, -88], scale: [110, 38, 1], seed: 11.57, drift: -0.7 },
+  { position: [20, 52, -96], scale: [130, 36, 1], seed: 12.84, drift: 0.6 },
+  { position: [0, 42, -104], scale: [160, 46, 1], seed: 14.11, drift: -0.5 },
 ];
+
+/** Each bank's graph, built once here rather than per render. */
+const CLOUD_BANKS = CLOUD_LAYERS.map((layer) => ({
+  layer,
+  nodes: createCloudNodes(layer.seed),
+}));
+
+/** Radians per second the moon turns on its axis. */
+const MOON_SPIN = 0.055;
 
 /**
  * Drifts the camera so the sky keeps a slow parallax with no input of its own.
@@ -108,26 +126,52 @@ function Rain() {
 }
 
 /**
+ * Drifts one cloud bank across the sky and wraps it round when it leaves.
+ * @param props - The bank's placement, speed and its own shading graph.
+ * @returns The bank's transparent plane.
+ */
+function CloudBank(props: { bank: (typeof CLOUD_BANKS)[number]; animate: boolean }) {
+  const mesh = useRef<Mesh>(null);
+
+  useFrame((_, delta) => {
+    const plane = mesh.current;
+
+    if (!(plane && props.animate)) {
+      return;
+    }
+
+    plane.position.x += props.bank.layer.drift * delta;
+
+    if (plane.position.x > CLOUD_WRAP) {
+      plane.position.x = -CLOUD_WRAP;
+    } else if (plane.position.x < -CLOUD_WRAP) {
+      plane.position.x = CLOUD_WRAP;
+    }
+  });
+
+  return (
+    <mesh position={props.bank.layer.position} ref={mesh} scale={props.bank.layer.scale}>
+      <planeGeometry args={[1, 1]} />
+      <NodeMaterial
+        colorNode={props.bank.nodes.color}
+        depthWrite={false}
+        opacityNode={props.bank.nodes.opacity}
+        transparent
+      />
+    </mesh>
+  );
+}
+
+/**
  * Hangs the drifting cloud banks over the rain.
+ * @param props - `animate` false leaves every bank parked.
  * @returns One transparent plane per cloud bank.
  */
-function Clouds() {
+function Clouds(props: { animate: boolean }) {
   return (
     <>
-      {CLOUD_LAYERS.map((layer) => (
-        <mesh
-          key={`${layer.position[0]}:${layer.position[2]}`}
-          position={layer.position}
-          scale={layer.scale}
-        >
-          <planeGeometry args={[1, 1]} />
-          <NodeMaterial
-            colorNode={CLOUD_COLOR_NODE}
-            depthWrite={false}
-            opacityNode={CLOUD_OPACITY_NODE}
-            transparent
-          />
-        </mesh>
+      {CLOUD_BANKS.map((bank) => (
+        <CloudBank animate={props.animate} bank={bank} key={bank.layer.seed} />
       ))}
     </>
   );
@@ -137,12 +181,24 @@ function Clouds() {
  * Hangs the moon in the sky, with a soft halo bleeding into the cloud bank.
  * The sphere is unit-sized and scaled up so its object-space coordinates stay
  * in `-1..1`, which is what keeps the crater noise at a predictable frequency.
+ * @param props - `animate` false parks the moon on its opening face.
  * @returns The moon and its glow.
  */
-function Moon() {
+function Moon(props: { animate: boolean }) {
+  const mesh = useRef<Mesh>(null);
+
+  // Spinning the sphere carries the craters past a terminator that stays put
+  // in world space, because the phase comes from `normalWorld` while the
+  // surface noise is sampled in object space. That is the whole illusion.
+  useFrame((_, delta) => {
+    if (mesh.current && props.animate) {
+      mesh.current.rotation.y += MOON_SPIN * delta;
+    }
+  });
+
   return (
     <>
-      <mesh position={MOON_POSITION} scale={MOON_RADIUS}>
+      <mesh position={MOON_POSITION} ref={mesh} rotation={[0.22, 0, 0.08]} scale={MOON_RADIUS}>
         <sphereGeometry args={[1, 48, 32]} />
         <NodeMaterial colorNode={MOON_COLOR_NODE} />
       </mesh>
@@ -245,8 +301,8 @@ export function RainScene(props: { animate: boolean; forceWebGL: boolean }) {
       }}
     >
       <Sky />
-      <Moon />
-      <Clouds />
+      <Moon animate={props.animate} />
+      <Clouds animate={props.animate} />
       <Rain />
       <CameraDrift enabled={props.animate} />
       {props.animate ? null : <FirstFrame />}

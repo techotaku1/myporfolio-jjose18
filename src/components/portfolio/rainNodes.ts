@@ -1,4 +1,5 @@
 import {
+  cameraPosition,
   color,
   float,
   instanceIndex,
@@ -57,22 +58,46 @@ function hashNode(seed: FloatNode): FloatNode {
   return seed.mul(12.9898).sin().mul(43_758.5453).fract();
 }
 
-// Sampled in world space so each cloud plane sits on a different part of the
-// noise field and no two look alike from one shared graph. The planes stay put
-// and the field drifts through them, which avoids the pattern swimming across
-// a moving mesh.
-const cloudNoisePosition = vec3(
-  positionWorld.x.mul(0.028).add(time.mul(0.01)),
-  positionWorld.y.mul(0.05),
-  positionWorld.z.mul(0.028),
-);
-const cloudDensity = mx_fractal_noise_float(cloudNoisePosition, 4, 2, 0.5, 1).mul(0.5).add(0.5);
-const cloudFalloff = uv().sub(0.5).length().mul(2).oneMinus().saturate().pow(1.6);
+/** Distance at which aerial perspective starts washing a cloud bank out. */
+const CLOUD_NEAR = 70;
+/** Distance at which a bank is as washed out as it gets. */
+const CLOUD_FAR = 165;
 
-/** Cloud colour, brightened where the noise field is dense. */
-export const CLOUD_COLOR_NODE = CLOUD_TINT.mul(cloudDensity.mul(0.6).add(0.55));
-/** Cloud opacity: soft-edged blobs that never reach full coverage. */
-export const CLOUD_OPACITY_NODE = smoothstep(0.26, 0.66, cloudDensity.mul(cloudFalloff)).mul(0.88);
+/**
+ * Builds one cloud bank's shading graph.
+ * Call this once per bank at module scope, never per render: each bank needs
+ * its own graph because the seed is baked in, and a node graph has to stay
+ * referentially stable.
+ * @param seed - Offsets this bank's slice of the noise field so no two banks share a shape.
+ * @returns The bank's colour and opacity nodes.
+ */
+export function createCloudNodes(seed: number) {
+  // Sampled in the plane's own UVs rather than world space, so the shape is
+  // pinned to the mesh and translates rigidly as the bank drifts. A world-space
+  // field would make the pattern swim through a moving plane instead.
+  const noisePosition = vec3(
+    uv().x.mul(3.4).add(seed),
+    uv()
+      .y.mul(1.7)
+      .add(seed * 0.63),
+    // Slow churn, so the vapour keeps evolving while the bank travels.
+    time.mul(0.012).add(seed * 1.37),
+  );
+  const density = mx_fractal_noise_float(noisePosition, 4, 2, 0.5, 1).mul(0.5).add(0.5);
+  const falloff = uv().sub(0.5).length().mul(2).oneMinus().saturate().pow(1.6);
+
+  // Aerial perspective. This is what actually reads as depth: a far bank loses
+  // contrast toward the horizon colour and thins out, so the eye places it
+  // behind a near one even though both are flat planes.
+  const cameraDistance = positionWorld.sub(cameraPosition).length();
+  const haze = smoothstep(CLOUD_NEAR, CLOUD_FAR, cameraDistance);
+  const tint = mix(CLOUD_TINT, SKY_LOW, haze.mul(0.75));
+
+  return {
+    color: tint.mul(density.mul(0.6).add(0.55)),
+    opacity: smoothstep(0.26, 0.66, density.mul(falloff)).mul(haze.oneMinus().mul(0.45).add(0.5)),
+  };
+}
 
 // The moon is shaded by hand rather than lit: a basic node material costs no
 // light setup, and the terminator is the only shading a sphere this size needs.
