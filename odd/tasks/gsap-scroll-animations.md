@@ -96,7 +96,7 @@ Gate before each work-unit commit (placeholder `DATABASE_URL` only on the comman
 | T3 | done | `4684469` |
 | T4 | done | `1817976` |
 | T5 | done | `31c3b74` |
-| T6 | done | (this commit) |
+| T6 | done | `0904a86` |
 | T7 | pending | — |
 | T8 | pending | — |
 
