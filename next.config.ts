@@ -72,16 +72,19 @@ if (!process.env.NEXT_PUBLIC_SENTRY_DISABLED) {
     // side errors will fail.
     tunnelRoute: '/monitoring',
 
+    // Off because it is incompatible with React Three Fiber, which reuses
+    // lowercase JSX names (`mesh`, `instancedMesh`, `boxGeometry`, …) for
+    // Three.js objects rather than DOM tags. The annotator marks every such
+    // element, Fiber feeds the unknown props into the Three.js object, and it
+    // throws `R3F: Cannot set "data-sentry-source-file"` on
+    // appendChildToContainer — killing the whole canvas before its first
+    // frame. `ignoredComponents` is not a way out: it suppresses only
+    // `data-sentry-component`, while `data-sentry-source-file` and
+    // `data-sentry-element` are still emitted, and the options expose no
+    // per-attribute switch. Everything else in Sentry is unaffected; what is
+    // lost is component names in stack traces.
     reactComponentAnnotation: {
-      enabled: true,
-      // The annotator adds `data-sentry-component` to every lowercase JSX
-      // element, and React Three Fiber's elements (`mesh`, `instancedMesh`,
-      // `boxGeometry`, …) only look like DOM tags: Fiber feeds unknown props
-      // into the Three.js object and throws
-      // `R3F: Cannot set "data-sentry-component"`, which kills the whole
-      // canvas. Every component that renders Fiber elements must be listed
-      // here, so keep this in step with `RainScene.tsx` when adding one.
-      ignoredComponents: ['RainScene', 'Sky', 'Clouds', 'Rain', 'CameraDrift', 'FirstFrame'],
+      enabled: false,
     },
 
     webpack: {
