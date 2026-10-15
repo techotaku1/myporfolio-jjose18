@@ -177,6 +177,13 @@ export function CityScene(props: { animate: boolean; forceWebGL: boolean }) {
 
         await renderer.init();
 
+        // Both backends draw the same picture, so WebGPU running and WebGPU
+        // having quietly fallen back are indistinguishable on screen. Record
+        // which one is live; one console expression then answers it:
+        // document.querySelector('.city-bg canvas')?.dataset.backend
+        defaults.canvas.dataset.backend =
+          'isWebGPUBackend' in renderer.backend ? 'webgpu' : 'webgl2';
+
         return renderer;
       }}
     >
