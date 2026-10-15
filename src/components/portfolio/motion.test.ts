@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  assembleSide,
   formatCount,
   indexToProgress,
   parseCountTarget,
@@ -107,6 +108,25 @@ describe('motion', () => {
     it('returns null for keys the tab list does not use', () => {
       expect(tabIndexForKey('Enter', 3, 6)).toBeNull();
       expect(tabIndexForKey('a', 3, 6)).toBeNull();
+    });
+  });
+
+  describe(assembleSide, () => {
+    it('brings a block in from the side of the page it sits on', () => {
+      expect(assembleSide(80, 500, 1280)).toBe('left');
+      expect(assembleSide(700, 500, 1280)).toBe('right');
+    });
+
+    it('raises full-width blocks from below', () => {
+      expect(assembleSide(40, 1200, 1280)).toBe('bottom');
+    });
+
+    it('raises a block centered on the page from below', () => {
+      expect(assembleSide(450, 380, 1280)).toBe('bottom');
+    });
+
+    it('falls back to below when the viewport has no width', () => {
+      expect(assembleSide(0, 100, 0)).toBe('bottom');
     });
   });
 });

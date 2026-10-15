@@ -96,3 +96,27 @@ export function tabIndexForKey(key: string, current: number, count: number): num
     }
   }
 }
+
+export type AssembleSide = 'left' | 'right' | 'bottom';
+
+/**
+ * Picks the side a block slides in from as it assembles on scroll: the side of the page it sits
+ * on, so blocks converge on their places; wide or centered blocks rise from below.
+ * @param left - Block's left edge in viewport pixels, without any assembly offset.
+ * @param width - Block's width in pixels.
+ * @param viewportWidth - Viewport width in pixels.
+ * @returns `left` or `right` for blocks off to one side, `bottom` otherwise.
+ */
+export function assembleSide(left: number, width: number, viewportWidth: number): AssembleSide {
+  if (viewportWidth <= 0 || width >= viewportWidth * 0.6) {
+    return 'bottom';
+  }
+
+  const offCenter = left + width / 2 - viewportWidth / 2;
+
+  if (Math.abs(offCenter) < viewportWidth * 0.1) {
+    return 'bottom';
+  }
+
+  return offCenter < 0 ? 'left' : 'right';
+}

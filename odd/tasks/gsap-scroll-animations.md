@@ -27,7 +27,7 @@ The reference relies on scroll-linked choreography that `IntersectionObserver` c
 - The hero `h1` (LCP candidate) is never set to opacity 0; it may move with transforms only.
 - Pinned tabs run only at `(min-width: 1024px)` with no-preference; tabs are real buttons, keyboard reachable, with `aria-selected`; mobile and reduced motion keep a static grid.
 - UI copy stays in Spanish, hard-coded; code, comments and commits in English.
-- `scroll-behavior: smooth` on `html` (portfolio.css:142) can fight ScrollTrigger refresh and programmatic scrolls; watch for it in T5 and T7.
+- `scroll-behavior: smooth` on `html` (portfolio.css:142) can fight ScrollTrigger refresh and programmatic scrolls; watch for it in T5 and T8.
 
 ## Tasks
 
@@ -46,14 +46,19 @@ The reference relies on scroll-linked choreography that `IntersectionObserver` c
   - Test-first exception: text splitting is DOM- and font-dependent; proof is visual verification plus checking the accessible name of each `h2`.
   - `.sec-head` no longer carries `reveal`; each head gets its own `once` timeline. Words split into `span`s (valid inside `h2`) with `mask: 'words'`; `aria: 'auto'` labels the `h2` while split, and the split is reverted on complete, so the settled DOM is the original markup.
   - Start state in CSS: eyebrow and sub hidden and lowered, `h2` at opacity 0, rule at `scaleX(0)`. The title is shown only after the `from` tween has pushed its words below their masks, so nothing flashes. Mask padding with a matching negative margin keeps accents, underscores and the last glyph (negative letter-spacing) from being clipped.
-  - No failsafe yet for below-the-fold heads, same as `.reveal`; reviewed in T7.
-- [ ] T5 — Reshape `AiSection` into a pinned section with scroll-driven tabs 01–0N (left list, right panel) on desktop; tabs clickable and keyboard accessible; static grid on mobile and reduced motion.
-  - Route: delegated writer with `frontend-design`. Trigger evidence: reshaping a major component (`AiSection.tsx`, CSS, motion helpers, tests).
-  - Test-first: `progressToIndex` and `indexToProgress` in `motion.ts` with `motion.test.ts`, RED before GREEN.
-- [ ] T6 — Subtle parallax on the hero background and console (scrub), gated by no-preference.
-  - Route: direct inline or writer, decided at T6 start. Trigger evidence: expected one hook file plus a CSS tweak.
+  - No failsafe yet for below-the-fold heads, same as `.reveal`; reviewed in T8.
+- [x] T5 — Reshape `AiSection` into a pinned section with scroll-driven tabs 01–0N (left list, right panel) on desktop; tabs clickable and keyboard accessible; static grid on mobile and reduced motion.
+  - Route: direct inline with `frontend-design` (planned as a delegated writer). The parent held the section, CSS and helper context; one new component (`AiToolTabs.tsx`) plus mechanical edits.
+  - Test-first: `progressToIndex`, `indexToProgress` and `tabIndexForKey` in `motion.ts` with `motion.test.ts`, RED before GREEN. Behavior covered by `tests/e2e/AiTabs.e2e.ts`.
+  - No snap: it fights the smooth anchor scroll and reads as scroll-jacking. The pin uses `refreshPriority: 1` because it is created after the page-level triggers.
+- [x] T6 — Scroll-linked assembly: every `.reveal` block slides in from the side of the page it sits on (left or right) or rises from below, scrubbed to the scroll; section heads scrubbed too (eyebrow, masked title words, rule, sub filling in word by word). Requested after T5 to match the reference more closely.
+  - Route: direct inline. Trigger evidence: one hook file, one CSS block, one helper; no writer needed.
+  - Test-first: `assembleSide` in `motion.ts` with `motion.test.ts`, RED (4 failed) before GREEN. Behavior covered by `tests/e2e/ScrollAssembly.e2e.ts`.
+  - GSAP tweens `--assemble-x`, `--assemble-y` and `--assemble-o`; CSS maps them to `translate` and `opacity`, so hover `transform`s still compose. `ScrollTrigger.batch` is gone; `end: 'clamp(top 62%)'` lets blocks at the page foot finish at max scroll. SplitText splits stay in place (the context revert undoes them).
+- [ ] T7 — Subtle parallax on the hero background and console (scrub), gated by no-preference.
+  - Route: direct inline or writer, decided at T7 start. Trigger evidence: expected one hook file plus a CSS tweak.
   - Test-first exception: scrubbed transforms need a real scroll; proof is visual verification.
-- [ ] T7 — Polish and close: `ScrollTrigger.refresh()` after fonts and images settle, `scroll-behavior` interplay, reduced-motion audit, visual verification, `design:accessibility-review` and `design:design-critique`.
+- [ ] T8 — Polish and close: failsafe for `.reveal` and `.sec-head` when JavaScript fails, `ScrollTrigger.refresh()` after fonts and images settle, `scroll-behavior` interplay, reduced-motion audit, visual verification, `design:accessibility-review` and `design:design-critique`.
   - Route: parent verification plus one writer only if fixes span 2+ files.
 
 ## Acceptance criteria
@@ -78,7 +83,7 @@ Gate before each work-unit commit (placeholder `DATABASE_URL` only on the comman
 ## Delivery
 
 - Branch: `feat/gsap-scroll-animations`, one Conventional Commit per task.
-- Forecast: about 600 changed lines across 7 tasks, above the 400-line review heuristic. Strategy `ask-on-risk`; the chain/split question is deferred because no push or PR is authorized.
+- Forecast: about 600 changed lines across 8 tasks, above the 400-line review heuristic. Strategy `ask-on-risk`; the chain/split question is deferred because no push or PR is authorized.
 - RDD: `disabled/unmanaged`.
 - A push to `main` deploys to production; merge this branch before shipping.
 
@@ -90,9 +95,10 @@ Gate before each work-unit commit (placeholder `DATABASE_URL` only on the comman
 | T2 | done | `8f690de` |
 | T3 | done | `4684469` |
 | T4 | done | `1817976` |
-| T5 | pending | — |
-| T6 | pending | — |
+| T5 | done | `31c3b74` |
+| T6 | done | (this commit) |
 | T7 | pending | — |
+| T8 | pending | — |
 
 ## Evidence
 
@@ -106,6 +112,10 @@ Gate before each work-unit commit (placeholder `DATABASE_URL` only on the comman
 
 - 2026-10-13 (T4): gate: lint, `check:types`, `check:deps` pass; `npm test` 9/9; `check:i18n` fails only on the 48-row boilerplate baseline. Reduced-motion path verified in the Browser pane: 5 `.sec-head` titles with their original text and no leftover `aria-label` or split spans, eyebrow/title/sub at opacity 1, rule at `transform: none`; `GET /` 200 with no new server or console errors. The no-preference timeline stays pending for T7.
 
+- 2026-10-14 (T5): RED then GREEN for the three helpers (`npm test` 20/20). `tests/e2e/AiTabs.e2e.ts` 5/5 against the dev server at 1280x800: with `reducedMotion: 'no-preference'` the tab list replaces the grid, scrolling moves the selection off the first tab, clicking tab 04 selects it and shows its tool, End/Home/ArrowDown move selection and focus; with `reduce` the grid stays and no tab list mounts. First proof of the no-preference path. Gate: lint, `check:types`, `check:deps` pass; `check:i18n` only the boilerplate baseline. The Browser pane still reports `reduce` (Windows animation effects off).
+
+- 2026-10-14 (T6): RED then GREEN for `assembleSide` (`npm test` 24/24). `ScrollAssembly.e2e.ts` plus `AiTabs.e2e.ts` 10/10 at 1280x800: with `no-preference` project cards start hidden with offsets on both sides and settle at opacity 1 and offset 0 once scrolled to; split titles keep their accessible name; no sideways scroll at 390px; with `reduce` cards show in place and GSAP never writes the offsets. The spec waits for hydration before reading offsets. Gate: lint, `check:types`, `check:deps` pass; `check:i18n` only the boilerplate baseline.
+
 ## Next step
 
-T5: pinned `AiSection` tabs on desktop; write `progressToIndex`/`indexToProgress` tests first (RED), then load `frontend-design`.
+T7: hero parallax with scrub, gated by no-preference; prove it with an e2e spec under `reducedMotion: 'no-preference'`.

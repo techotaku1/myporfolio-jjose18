@@ -41,7 +41,7 @@ export function AiSection() {
             sistema ejecute, verifique e itere.
           </p>
         </div>
-        {/* Stays mounted while hidden: the page-level reveal batch registered its cards at mount. */}
+        {/* Stays mounted while hidden: the page-level assembly registered its cards at mount. */}
         <div className="ai-grid" hidden={tabbed}>
           {AI_TOOLS.map((t) => (
             <div className="ai-tool reveal" key={t.n}>

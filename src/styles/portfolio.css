@@ -1246,14 +1246,14 @@ html {
   color: var(--primary);
 }
 
-/* reveal on scroll: GSAP (usePortfolioMotion) animates these in and then adds `.in`.
-   Hidden only when scripts run and motion is allowed, so content never depends on JS. */
+/* Assemble on scroll: GSAP (usePortfolioMotion) scrubs these variables as each block scrolls
+   into view. `translate` composes with the hover `transform`s, and neither property is in a
+   block's transition list. Hidden only when scripts run and motion is allowed, so content
+   never depends on JS. */
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  .portfolio-root .reveal:not(.in) {
-    opacity: 0;
-    transform: translateY(24px);
-    /* Keep hover transitions from lagging behind GSAP's per-frame transform updates. */
-    transition: none;
+  .portfolio-root .reveal {
+    opacity: var(--assemble-o, 0);
+    translate: var(--assemble-x, 0px) var(--assemble-y, 48px);
   }
 
   /* Hero entrance start state. The h1 (LCP candidate) only moves; it never fades. */
