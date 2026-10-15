@@ -49,3 +49,17 @@ The boilerplate's Clerk auth, dashboard, sign-in/up, about and counter pages wer
 - JSDoc: `/**` above the symbol, sentence-case present-tense description, tags ordered description, `@param`, `@returns`, `@throws` (only if it throws).
 - Tests: `*.test.ts(x)` co-located; top-level `describe` names the subject; `it` titles are third-person present tense, sentence case, no trailing period, no "should/works/handles/checks/validates". Describe what the test demonstrates, not how; avoid mocking unless necessary.
 - Escape glob characters in shell commands for paths like `src/app/[locale]/`.
+
+## 3D animation (WebGPU + TSL)
+
+No 3D code exists yet and `three` is not a dependency; this section governs it when it lands. It does not apply to the existing GSAP/CSS/SVG motion in `src/components/portfolio/` (`usePortfolioMotion.ts`, `HexagonBackground.tsx`, `OrbitingCircles.tsx`, `ProjectArt.tsx`), which stays as it is.
+
+- Inside a `<Canvas>` the renderer is `WebGPURenderer` from `three/webgpu`, passed as Fiber 9's async `gl` factory and `await renderer.init()`ed before it is returned. Never construct `WebGLRenderer` yourself.
+- Shading is TSL (`three/tsl`) on node materials (`MeshStandardNodeMaterial`, `MeshBasicNodeMaterial`, …) through `extend`. Do not author GLSL: no `ShaderMaterial`, no drei `shaderMaterial`, no `onBeforeCompile` patching, no `glsl` template strings. Prefer a compute shader over a CPU loop for per-particle work.
+- WebGPURenderer's own WebGL2 fallback is the one place WebGL is allowed; it is a reliability feature, not a second code path to write. Built-in node materials survive it, a graph relying on compute does not, so gate those scenes behind a capability check and ship a poster frame instead (iOS before 26 has no WebGPU at all).
+- `@react-three/postprocessing` and `postprocessing` are WebGL composers: do not install them. WebGPU postprocessing uses Three's own node pipeline, named `RenderPipeline` since r183 (`PostProcessing` in older tutorials).
+- Build TSL node graphs once at module scope or in a ref, never per render. The React Compiler ban on `useMemo` still holds, and auto-memoization is an optimization, not a guarantee of the referential stability a node graph needs.
+- A `<Canvas>` cannot prerender. Keep it in a `'use client'` leaf loaded through `next/dynamic` with `ssr: false` so `/en` stays fully static, and reserve its layout box to avoid CLS.
+- Honour `(prefers-reduced-motion: reduce)` as `usePortfolioMotion.ts` already does: no render loop, poster frame only. Use `frameloop="demand"` with `invalidate()` for scenes that settle, and stop the loop when the canvas leaves the viewport.
+- `three` costs ~600KB before any scene: compare `npm run build-stats` before and after, and expect `check:deps` to need new `knip.config.ts` entries.
+- Skills: `r3f-fundamentals` (plus its `renderers.md`), `r3f-animation`, `r3f-materials` and `r3f-shaders` (plus its `webgpu.md`) for the React layer; `webgpu-threejs-tsl` for TSL, compute shaders and device loss. Neither certifies R3F + WebGPU + Next.js together and the r3f fixtures are WebGL-only, so verify on a real WebGPU backend rather than trusting a type-check.
