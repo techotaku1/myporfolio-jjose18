@@ -89,7 +89,7 @@ Gate before each work-unit commit (placeholder `DATABASE_URL` only on the comman
 | T1 | merged into T2 | `8f690de` |
 | T2 | done | `8f690de` |
 | T3 | done | `4684469` |
-| T4 | done | see `git log` (recorded with T5) |
+| T4 | done | `1817976` |
 | T5 | pending | — |
 | T6 | pending | — |
 | T7 | pending | — |

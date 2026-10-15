@@ -725,6 +725,114 @@ html {
   font-size: 0.85rem;
   color: var(--muted);
 }
+
+/* Pinned tabs (AiToolTabs): desktop with motion allowed only; elsewhere the grid above shows. */
+.portfolio-root .ai-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: stretch;
+}
+.portfolio-root .ai-tabs {
+  display: flex;
+  flex-direction: column;
+}
+.portfolio-root .ai-tab {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.95rem 0 0.95rem 1.4rem;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+/* Progress line: a track per tab, filled for tools already passed and by scroll for the active one. */
+.portfolio-root .ai-tab::before,
+.portfolio-root .ai-tab::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+}
+.portfolio-root .ai-tab::before {
+  background: var(--border);
+}
+.portfolio-root .ai-tab::after {
+  background: var(--primary);
+  transform: scaleY(0);
+  transform-origin: top;
+}
+.portfolio-root .ai-tab[data-state='done']::after {
+  transform: scaleY(1);
+}
+.portfolio-root .ai-tab[data-state='active']::after {
+  transform: scaleY(var(--seg, 0));
+}
+.portfolio-root .ai-tab:hover,
+.portfolio-root .ai-tab[aria-selected='true'] {
+  color: var(--fg);
+}
+.portfolio-root .ai-tab-idx {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 400;
+}
+.portfolio-root .ai-tab[aria-selected='true'] .ai-tab-idx {
+  color: var(--primary);
+}
+.portfolio-root :is(.ai-tab, .ai-panel):focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 4px;
+}
+.portfolio-root .ai-panel {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  padding: clamp(2rem, 4vw, 3.5rem);
+}
+/* Index on top, name and description at the bottom, at the tab list's height. */
+.portfolio-root .ai-panel-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+  height: 100%;
+}
+.portfolio-root .ai-panel-idx {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--primary);
+}
+.portfolio-root .ai-panel h3 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.6vw, 3.25rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+.portfolio-root .ai-panel p {
+  max-width: 46ch;
+  margin-top: 1rem;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .portfolio-root .ai-panel-body {
+    animation: ai-panel-in 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+@keyframes ai-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
 .portfolio-root .method-row {
   display: grid;
   gap: 1rem;
