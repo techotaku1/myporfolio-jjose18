@@ -43,5 +43,7 @@ export const config = {
   // Match all pathnames except for
   // - … if they start with `/_next`, `/_vercel` or `monitoring`
   // - … the ones containing a dot (e.g. `favicon.ico`)
-  matcher: '/((?!_next|_vercel|monitoring|api|.*\\..*).*)',
+  // - … generated Open Graph images: next-intl would redirect `/en/opengraph-image-*`
+  //   to the unprefixed path and drop its cache-busting query, so crawlers got a 307
+  matcher: '/((?!_next|_vercel|monitoring|api|.*opengraph-image|.*\\..*).*)',
 };

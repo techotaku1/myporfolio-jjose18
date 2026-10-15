@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { ImageResponse } from 'next/og';
 
-export const alt = 'Jose David Gonzalez — Full-Stack & IA Developer';
+export const alt = 'Jose David Gonzalez — Full-Stack & AI Developer';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -41,17 +41,17 @@ export default function OpengraphImage() {
             Jose David Gonzalez
           </div>
           <div style={{ fontSize: 30, color: '#38bdf8', marginTop: 8 }}>
-            Full-Stack &amp; IA Developer
+            Full-Stack &amp; AI Developer
           </div>
         </div>
       </div>
 
       <div style={{ fontSize: 30, color: '#cbd5e1', marginTop: 48, lineHeight: 1.4 }}>
-        React · Next.js · TypeScript · Python · FastAPI · Sistemas agénticos con IA
+        React · Next.js · TypeScript · Python · FastAPI · Agentes, skills y subagentes de IA
       </div>
 
       <div style={{ display: 'flex', fontSize: 24, color: '#64748b', marginTop: 24 }}>
-        Cali, Colombia · Disponible para proyectos freelance
+        Cali, Colombia · Freelance remoto para Colombia, EE. UU. y España
       </div>
     </div>,
     size,

@@ -29,7 +29,7 @@ export const GOOGLE_SITE_VERIFICATION = 'AGpNPOb2L1Z4p1pOdNGsInrVPMiVKBk020FAa0T
  * crawler can see, and search engines discount a sitemap whose dates always
  * move. Bump this only when the visible content actually changes.
  */
-export const CONTENT_LAST_MODIFIED = '2026-08-18';
+export const CONTENT_LAST_MODIFIED = '2026-10-14';
 
 /**
  * Language of the indexable public content.

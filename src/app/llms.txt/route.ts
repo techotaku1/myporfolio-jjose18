@@ -32,12 +32,12 @@ export function GET() {
 
   const body = `# Jose David Gonzalez
 
-> Desarrollador Full-Stack e IA radicado en Cali, Valle del Cauca, Colombia. Construye aplicaciones web a medida con React, Next.js y TypeScript, servicios backend con Python y FastAPI, y automatizaciones con IA. Disponible para proyectos freelance en Colombia y en remoto.
+> Desarrollador Full-Stack & AI radicado en Cali, Valle del Cauca, Colombia. Construye aplicaciones web a medida con React, Next.js y TypeScript, servicios backend con Python y FastAPI, y automatizaciones con IA. Disponible para proyectos freelance y trabajo remoto con empresas de Colombia, Estados Unidos y España.
 
 - Sitio oficial: ${baseUrl}
-- Idioma del contenido: español (es-CO)
-- Zona de servicio: Colombia — Cali y Valle del Cauca, además de proyectos remotos
-- Estado: disponible para proyectos freelance
+- Idioma del contenido: español (es-CO); se comunica también en inglés
+- Zona de servicio: Colombia (Cali y Valle del Cauca), Estados Unidos y España, en remoto
+- Estado: disponible para proyectos freelance y trabajo remoto
 - Contacto preferido: WhatsApp al ${PHONE_E164} — ${WHATSAPP_URL}
 - Correo: jsdg1818@gmail.com
 - GitHub: https://github.com/techotaku1
@@ -47,11 +47,11 @@ export function GET() {
 
 Jose David Gonzalez es un desarrollador Full-Stack colombiano especializado en la combinación de desarrollo web moderno e inteligencia artificial aplicada. Su trabajo se concentra en tres frentes: interfaces con React y Next.js, backends serverless sobre Postgres y AWS, y automatización de procesos mediante agentes e integraciones con n8n.
 
-Trabaja con metodologías de especificación previa al código: Spec-Driven Development (SDD), OpenSpec y Model Context Protocol (MCP) para orquestar agentes de codificación.
+Trabaja con especificaciones antes del código, mediante Spec-Driven Development (SDD) y OpenSpec, y conecta los agentes de codificación con herramientas externas mediante Model Context Protocol (MCP). Diseña skills, subagentes y hooks que dan a los agentes el contexto de cada proyecto y convierten flujos repetitivos en procesos reutilizables.
 
 ## Servicios
 
-Toma proyectos de desarrollo web para empresas, emprendedores y agencias en Colombia, y también trabajo remoto. La vía de contacto más rápida es WhatsApp al ${PHONE_E164}; normalmente responde el mismo día.
+Toma proyectos de desarrollo web para empresas, emprendedores y agencias de Colombia, Estados Unidos y España, en remoto. La vía de contacto más rápida es WhatsApp al ${PHONE_E164}; normalmente responde el mismo día.
 
 ${services}
 

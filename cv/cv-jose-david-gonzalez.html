@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>CV — Jose David Gonzalez Gonzalez</title>
+    <!--
+      Source of public/cv-jose-david-gonzalez.pdf. After editing, regenerate the PDF from the repo root:
+      npx playwright pdf --paper-format Letter cv/cv-jose-david-gonzalez.html public/cv-jose-david-gonzalez.pdf
+    -->
+    <style>
+      @page {
+        size: Letter;
+        margin: 0;
+      }
+      :root {
+        --ink: #1f2328;
+        --muted: #57606a;
+        --accent: #3f6212;
+        --rule: #d0d7de;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 0.42in 0.55in 0.3in;
+        color: var(--ink);
+        background: #fff;
+        font-family: 'Segoe UI', 'Noto Sans', Arial, sans-serif;
+        font-size: 9.4pt;
+        line-height: 1.32;
+      }
+      h1 {
+        margin: 0;
+        font-size: 24pt;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+      }
+      .headline {
+        margin: 0.2rem 0 0.35rem;
+        color: var(--accent);
+        font-size: 12pt;
+        font-weight: 600;
+      }
+      .contact {
+        margin: 0;
+        color: var(--muted);
+        font-size: 9.5pt;
+      }
+      .contact a {
+        color: var(--ink);
+        text-decoration: none;
+      }
+      header {
+        padding-bottom: 0.5rem;
+        border-bottom: 2.5px solid var(--accent);
+      }
+      h2 {
+        margin: 0.6rem 0 0.3rem;
+        padding-bottom: 0.15rem;
+        border-bottom: 1px solid var(--rule);
+        color: var(--accent);
+        font-size: 10pt;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      p {
+        margin: 0;
+      }
+      .skills {
+        display: grid;
+        grid-template-columns: 7.6rem 1fr;
+        gap: 0.12rem 0.5rem;
+      }
+      .skills dt {
+        font-weight: 600;
+      }
+      .skills dd {
+        margin: 0;
+      }
+      .entry {
+        margin-top: 0.3rem;
+      }
+      .entry-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+      .entry-head b {
+        font-weight: 700;
+      }
+      .when {
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .org {
+        color: var(--muted);
+      }
+      ul {
+        margin: 0.15rem 0 0;
+        padding-left: 1.1rem;
+      }
+      li {
+        margin: 0.05rem 0;
+      }
+      li::marker {
+        color: var(--accent);
+      }
+      .rows > div {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        margin: 0.1rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Jose David Gonzalez Gonzalez</h1>
+      <p class="headline">
+        Desarrollador Full-Stack &amp; AI · React · Next.js · TypeScript · Python
+      </p>
+      <p class="contact">
+        Cali, Colombia · Remoto para Colombia, EE. UU. y España ·
+        <a href="tel:+573241149554">+57 324 114 9554</a> ·
+        <a href="mailto:jsdg1818@gmail.com">jsdg1818@gmail.com</a>
+      </p>
+      <p class="contact">
+        <a href="https://josedavid-portfolio.vercel.app">josedavid-portfolio.vercel.app</a> ·
+        <a href="https://www.linkedin.com/in/jjose18/">linkedin.com/in/jjose18</a> ·
+        <a href="https://github.com/techotaku1">github.com/techotaku1</a>
+      </p>
+    </header>
+
+    <h2>Perfil profesional</h2>
+    <p>
+      Desarrollador Full-Stack y Tecnólogo en Sistemas con experiencia construyendo aplicaciones web
+      en producción con React, Next.js, TypeScript y PostgreSQL. Actualmente desarrollo de forma
+      remota una plataforma educativa con IA, de la interfaz a la base de datos y el despliegue.
+      Trabajo de forma nativa con IA: diseño skills, subagentes y servidores MCP que dan a los
+      agentes (Claude Code, Copilot) el contexto del proyecto, y aplico desarrollo guiado por
+      especificaciones para entregar rápido sin sacrificar calidad. Disponible para proyectos
+      freelance y para trabajo remoto, por proyecto o a tiempo completo, con empresas de Colombia,
+      Estados Unidos y España.
+    </p>
+
+    <h2>Habilidades técnicas</h2>
+    <dl class="skills">
+      <dt>Lenguajes</dt>
+      <dd>TypeScript, JavaScript (ES6+), Python, SQL, HTML5, CSS3</dd>
+      <dt>Frontend</dt>
+      <dd>
+        React, Next.js (App Router, SSR/SSG), Tailwind CSS, Shadcn/UI, GSAP, diseño responsive
+      </dd>
+      <dt>Backend y datos</dt>
+      <dd>
+        FastAPI, APIs REST con Next.js Route Handlers, PostgreSQL (Neon), Drizzle ORM, SQLite, AWS
+        S3
+      </dd>
+      <dt>Infra y testing</dt>
+      <dd>Vercel, Clerk, Upstash, GitHub Actions (CI), Sentry, Git, Vitest, Playwright, Zod</dd>
+      <dt>IA y agentes</dt>
+      <dd>
+        Claude Code, GitHub Copilot, Codex, Gemini CLI; skills, subagentes y hooks; Model Context
+        Protocol (MCP); SDD y OpenSpec; n8n; Machine Learning (fundamentos)
+      </dd>
+      <dt>SEO técnico</dt>
+      <dd>
+        Metadatos, datos estructurados JSON-LD, sitemap y robots, llms.txt, Google Search Console
+      </dd>
+    </dl>
+
+    <h2>Experiencia profesional</h2>
+    <div class="entry">
+      <div class="entry-head">
+        <b>Desarrollador Full-Stack (Next.js e IA)</b>
+        <span class="when">2024 – Actualidad</span>
+      </div>
+      <div class="org">
+        Plataforma educativa social (EdTech) · Remoto · Contratista independiente
+      </div>
+      <ul>
+        <li>
+          Desarrollo de extremo a extremo una plataforma EdTech con IA: cursos, proyectos y un feed
+          social en tiempo real.
+        </li>
+        <li>
+          Construyo la interfaz con Next.js 16, React, TypeScript, Tailwind CSS y Shadcn/UI, con
+          foco en rendimiento.
+        </li>
+        <li>
+          Modelo la capa de datos serverless con Neon (PostgreSQL) y Drizzle ORM, y gestiono los
+          archivos multimedia en AWS S3.
+        </li>
+        <li>
+          Integro autenticación con Clerk, Upstash y despliegue continuo en Vercel; desarrollo
+          asistido por agentes de IA.
+        </li>
+      </ul>
+    </div>
+    <div class="entry">
+      <div class="entry-head">
+        <span><b>Desarrollador Web Freelance</b> <span class="org">· Independiente</span></span>
+        <span class="when">2024</span>
+      </div>
+      <ul>
+        <li>
+          Desarrollé aplicaciones web a medida con React y Next.js, con backend en AWS y SQLite,
+          enfocadas en rendimiento y SEO.
+        </li>
+      </ul>
+    </div>
+
+    <h2>Proyectos destacados</h2>
+    <div class="entry">
+      <div class="entry-head">
+        <b>Portafolio profesional en producción</b>
+        <span class="when">josedavid-portfolio.vercel.app</span>
+      </div>
+      <ul>
+        <li>
+          Next.js 16, React 19, TypeScript y Tailwind CSS 4; animaciones con GSAP y API de contacto
+          con validación Zod.
+        </li>
+        <li>
+          SEO técnico y para buscadores con IA: JSON-LD, sitemap, robots, llms.txt y verificación en
+          Google Search Console.
+        </li>
+        <li>
+          Anti-bots con Arcjet, monitoreo con Sentry, pruebas con Vitest y Playwright, e integración
+          continua en GitHub Actions.
+        </li>
+      </ul>
+    </div>
+    <p class="entry">
+      <b>Automatización de procesos con n8n:</b> flujos que conectan servicios mediante webhooks y
+      APIs e integran IA generativa.
+    </p>
+
+    <h2>Otra experiencia</h2>
+    <ul>
+      <li>
+        <b>Soporte técnico de equipos</b> (freelance, 2014): hardware, software (Windows y Linux),
+        redes y recuperación de datos.
+      </li>
+      <li>
+        <b>Edición de video y diseño</b> (freelance, 2023 – actualidad): contenido para redes
+        sociales y marketing con CapCut y Canva.
+      </li>
+    </ul>
+
+    <h2>Formación e idiomas</h2>
+    <div class="rows">
+      <div>
+        <span
+          ><b>Tecnólogo en Sistemas</b> · FCECEP (Fundación Centro Colombiano de Estudios
+          Profesionales), Cali</span
+        >
+        <span class="when">2011 – 2014</span>
+      </div>
+      <div>
+        <span><b>Técnico en Desarrollo de Software</b></span>
+        <span class="when">Finalizado en 2024</span>
+      </div>
+      <div>
+        <span><b>Curso de Machine Learning</b> · Instituto Ponao</span>
+        <span class="when">2024</span>
+      </div>
+      <div>
+        <span><b>Idiomas</b> · Español nativo · Inglés intermedio</span>
+      </div>
+    </div>
+  </body>
+</html>

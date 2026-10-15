@@ -38,7 +38,7 @@ export const PROJECTS: Project[] = [
   {
     title: 'Plataforma EdTech Social',
     art: 'social',
-    desc: 'Ecosistema educativo impulsado por IA donde los estudiantes no solo consumen cursos, sino que comparten y colaboran en proyectos a través de un social feed dinámico en tiempo real.',
+    desc: 'Ecosistema educativo impulsado por IA donde los estudiantes no solo consumen cursos, sino que comparten y colaboran en proyectos a través de un feed social en tiempo real.',
     tags: ['Next.js 16', 'Shadcn/UI', 'Neon · Postgres', 'Drizzle ORM', 'AWS S3', 'Clerk'],
     role: 'Full-Stack · Remoto',
   },
@@ -64,32 +64,32 @@ export const AI_TOOLS: AiTool[] = [
   {
     n: '01',
     name: 'Claude Code',
-    desc: 'Desarrollo asistido por agentes en terminal: refactors, features completas y revisión de código de extremo a extremo.',
+    desc: 'Agentes en la terminal que implementan features completas, refactorizan y revisan código de extremo a extremo.',
   },
   {
     n: '02',
     name: 'Gemini CLI',
-    desc: 'Generación y análisis de código desde la línea de comandos, integrado al flujo diario de desarrollo.',
+    desc: 'Generación y análisis de código desde la terminal, integrado al flujo diario de desarrollo.',
   },
   {
     n: '03',
     name: 'Codex',
-    desc: 'Pair-programming con IA para acelerar prototipos, tests y resolución de bugs.',
+    desc: 'Pair programming con IA para acelerar prototipos, tests y corrección de bugs.',
   },
   {
     n: '04',
     name: 'OpenCode',
-    desc: 'Entorno de codificación agéntico open-source para tareas autónomas sobre el repositorio.',
+    desc: 'Agente de código open source que ejecuta tareas autónomas sobre el repositorio.',
   },
   {
     n: '05',
     name: 'GitHub Copilot',
-    desc: 'Autocompletado contextual y sugerencias dentro del editor para mantener el ritmo de entrega.',
+    desc: 'Autocompletado contextual y chat dentro de VS Code para mantener el ritmo de entrega.',
   },
   {
     n: '06',
-    name: 'VS Code + Agentes',
-    desc: 'Editor configurado con sistemas agénticos y herramientas MCP para orquestar tareas complejas.',
+    name: 'Skills y subagentes',
+    desc: 'Diseño skills, subagentes, hooks y servidores MCP que dan a los agentes el contexto del proyecto y convierten flujos repetitivos en procesos reutilizables.',
   },
 ];
 
@@ -98,19 +98,19 @@ export type Method = { b: string; s: string };
 export const METHODS: Method[] = [
   {
     b: 'SDD',
-    s: 'Spec-Driven Development — la especificación guía cada feature antes de escribir código.',
+    s: 'Spec-Driven Development: la especificación guía cada feature antes de escribir código.',
   },
   {
     b: 'OpenSpec',
-    s: 'Desarrollo dirigido por OpenSpec: contratos claros entre intención y ejecución.',
+    s: 'Especificaciones versionadas que dejan claro qué se construye antes de delegarlo a un agente.',
   },
   {
     b: 'MCP',
-    s: 'Minimum Competent Product y Model Context Protocol para planificar y conectar agentes.',
+    s: 'Model Context Protocol: conecto los agentes con herramientas, documentación y servicios externos.',
   },
   {
     b: 'Sistemas agénticos',
-    s: 'Orquestación de agentes autónomos que ejecutan, verifican e iteran sobre el código.',
+    s: 'Orquestación de agentes y subagentes que ejecutan, verifican e iteran sobre el código.',
   },
 ];
 
@@ -125,6 +125,7 @@ export const SKILLS: SkillGroup[] = [
       'TypeScript',
       'Tailwind CSS',
       'Shadcn/UI',
+      'GSAP',
       'HTML5 · CSS3',
     ],
   },
@@ -137,8 +138,9 @@ export const SKILLS: SkillGroup[] = [
     items: [
       'Claude Code · Codex',
       'Gemini CLI · OpenCode',
+      'Skills · Subagentes · MCP',
       'n8n · Workflows',
-      'Machine Learning',
+      'Machine Learning (fundamentos)',
       'Vercel · Upstash',
     ],
   },
@@ -175,9 +177,9 @@ export const EXPERIENCE: ExperienceEntry[] = [
     org: 'Plataforma Educativa Social · Remoto',
     points: [
       'Desarrollo de una plataforma EdTech impulsada por IA con social feed colaborativo en tiempo real.',
-      'Next.js 16 + Shadcn/UI priorizando velocidad de carga e interactividad.',
+      'Interfaz con Next.js 16 y Shadcn/UI, priorizando velocidad de carga e interactividad.',
       'Servicios serverless: Neon (Postgres), Drizzle ORM y AWS S3 para activos multimedia.',
-      'Programación asistida por IA (Claude Code, Copilot) para acelerar la entrega y la calidad.',
+      'Desarrollo asistido por IA (Claude Code, Copilot) para entregar más rápido sin sacrificar calidad.',
     ],
   },
   {
@@ -187,7 +189,7 @@ export const EXPERIENCE: ExperienceEntry[] = [
     points: ['Aplicaciones web con React y Next.js.', 'Soluciones backend con AWS y SQLite.'],
   },
   {
-    when: '2023 — Presente',
+    when: '2023 — Actualidad',
     role: 'Edición de Video & Diseño',
     org: 'Freelance · CapCut · Canva',
     points: [
@@ -210,6 +212,10 @@ export type EducationEntry = { t: string; org: string; yr: string };
 
 export const EDU: EducationEntry[] = [
   { t: 'Tecnólogo en Sistemas', org: 'FCECEP', yr: '2011 — 2014' },
-  { t: 'Técnico en Desarrollo de Software', org: 'Finalizado', yr: 'Marzo 2024' },
-  { t: 'Machine Learning', org: 'Instituto Ponao', yr: 'Marzo 2024' },
+  {
+    t: 'Técnico en Desarrollo de Software',
+    org: 'Programa técnico · Finalizado',
+    yr: 'Marzo 2024',
+  },
+  { t: 'Curso de Machine Learning', org: 'Instituto Ponao', yr: 'Marzo 2024' },
 ];

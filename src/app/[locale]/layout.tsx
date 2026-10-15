@@ -9,7 +9,7 @@ import '@/styles/global.css';
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
   title: {
-    default: 'Jose David Gonzalez — Full-Stack & IA Developer',
+    default: 'Jose David Gonzalez — Full-Stack & AI Developer',
     template: '%s | Jose David Gonzalez',
   },
   // Fallback description for routes that do not define their own, so no page

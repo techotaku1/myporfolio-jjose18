@@ -50,4 +50,4 @@ export const SERVICES = [
 ] as const;
 
 /** Hero headline. The last line renders with the gradient treatment. */
-export const HEADLINE = ['FULL', 'STACK', 'IA_DEV_'] as const;
+export const HEADLINE = ['FULL', 'STACK', 'AI_DEV_'] as const;

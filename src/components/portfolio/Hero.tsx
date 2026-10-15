@@ -22,7 +22,7 @@ export function Hero() {
                 className="avatar-img"
               />
             </div>
-            <span className="hero-tagline">FULL STACK · IA DEVELOPMENT</span>
+            <span className="hero-tagline">FULL STACK · AI DEVELOPMENT</span>
           </div>
           <h1 className="display">
             {HEADLINE.map((line, i) => (
@@ -33,9 +33,10 @@ export function Hero() {
             ))}
           </h1>
           <p className="lead enter">
-            Tecnólogo en Sistemas y Desarrollador Full-Stack en Cali, Colombia. Construyo
-            aplicaciones web a medida con React, Next.js y FastAPI — y desarrollo de forma nativa
-            con IA y sistemas agénticos. Disponible para proyectos freelance.
+            Tecnólogo en Sistemas y desarrollador Full-Stack en Cali, Colombia. Construyo
+            aplicaciones web a medida con React, Next.js y FastAPI, y trabajo de forma nativa con
+            IA: agentes, skills y subagentes que aceleran cada entrega. Disponible para proyectos
+            freelance y trabajo remoto con empresas de Colombia, Estados Unidos y España.
           </p>
           <div className="hero-actions enter">
             <a

@@ -37,8 +37,8 @@ export function AiSection() {
             <div className="rule" style={{ marginTop: '1rem' }} />
           </div>
           <p className="muted sub">
-            Programo de forma nativa con IA: orquesto agentes, defino especificaciones y dejo que el
-            sistema ejecute, verifique e itere.
+            Programo de forma nativa con IA: defino especificaciones, diseño skills y subagentes con
+            el contexto del proyecto y orquesto agentes que ejecutan, verifican e iteran.
           </p>
         </div>
         {/* Stays mounted while hidden: the page-level assembly registered its cards at mount. */}
