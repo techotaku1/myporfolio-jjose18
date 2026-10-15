@@ -4,6 +4,7 @@ import {
   instanceIndex,
   mix,
   mx_fractal_noise_float,
+  normalWorld,
   positionLocal,
   positionWorld,
   smoothstep,
@@ -38,6 +39,12 @@ const SKY_LOW = color('#3a4e85');
 const SKY_HIGH = color('#0d1326');
 const CLOUD_TINT = color('#5a72ad');
 const RAIN_TINT = color('#cfe4ff');
+const MOON_LIT = color('#e8edff');
+const MOON_SHADE = color('#2b3356');
+const MOON_GLOW = color('#8fa6e8');
+
+/** Direction the sunlight reaches the moon from, which sets its phase. */
+const MOON_LIGHT = vec3(0.62, 0.3, 0.72).normalize();
 
 /**
  * Hashes a node value into a repeatable pseudo-random node value.
@@ -65,7 +72,29 @@ const cloudFalloff = uv().sub(0.5).length().mul(2).oneMinus().saturate().pow(1.6
 /** Cloud colour, brightened where the noise field is dense. */
 export const CLOUD_COLOR_NODE = CLOUD_TINT.mul(cloudDensity.mul(0.6).add(0.55));
 /** Cloud opacity: soft-edged blobs that never reach full coverage. */
-export const CLOUD_OPACITY_NODE = smoothstep(0.34, 0.72, cloudDensity.mul(cloudFalloff)).mul(0.8);
+export const CLOUD_OPACITY_NODE = smoothstep(0.26, 0.66, cloudDensity.mul(cloudFalloff)).mul(0.88);
+
+// The moon is shaded by hand rather than lit: a basic node material costs no
+// light setup, and the terminator is the only shading a sphere this size needs.
+const moonFacing = normalWorld.dot(MOON_LIGHT);
+// Softened so the edge reads as a curved surface instead of a hard cut.
+const moonDay = smoothstep(-0.18, 0.35, moonFacing);
+// Craters and maria sampled in object space, so the pattern sticks to the
+// surface rather than sliding across it as the sphere sits in the scene.
+const moonSurface = mx_fractal_noise_float(positionLocal.mul(2.6), 4, 2, 0.5, 1).mul(0.5).add(0.5);
+const moonMaria = smoothstep(0.44, 0.64, moonSurface).mul(0.26);
+// Earthshine keeps the unlit limb from falling to flat black against the sky.
+const moonNight = MOON_SHADE.mul(moonDay.oneMinus().mul(0.5).add(0.12));
+
+/** Moon surface: lit face with dark maria, fading into a faint earthlit limb. */
+export const MOON_COLOR_NODE = mix(moonNight, MOON_LIT.mul(moonMaria.oneMinus()), moonDay);
+
+const moonHaloFalloff = uv().sub(0.5).length().mul(2).oneMinus().saturate();
+
+/** Halo colour for the glow plane sitting behind the moon. */
+export const MOON_HALO_COLOR_NODE = MOON_GLOW;
+/** Halo opacity: a tight bloom that falls off well before the plane's edge. */
+export const MOON_HALO_OPACITY_NODE = moonHaloFalloff.pow(3.2).mul(0.6);
 
 /** Vertical sky gradient for the backdrop plane, lightest at the horizon. */
 export const SKY_COLOR_NODE = mix(SKY_LOW, SKY_HIGH, uv().y.pow(0.75));
@@ -104,4 +133,4 @@ const dropAlpha = varying(dropFade.mul(seedPhase.mul(0.45).add(0.4)));
 /** Streak colour: a pale, almost white blue. */
 export const RAIN_COLOR_NODE = RAIN_TINT;
 /** Streak opacity, varied per drop so the fall reads as having depth. */
-export const RAIN_OPACITY_NODE = dropAlpha.mul(0.55);
+export const RAIN_OPACITY_NODE = dropAlpha.mul(0.42);

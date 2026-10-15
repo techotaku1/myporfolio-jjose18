@@ -8,6 +8,9 @@ import { MeshBasicNodeMaterial, WebGPURenderer } from 'three/webgpu';
 import {
   CLOUD_COLOR_NODE,
   CLOUD_OPACITY_NODE,
+  MOON_COLOR_NODE,
+  MOON_HALO_COLOR_NODE,
+  MOON_HALO_OPACITY_NODE,
   RAIN_COLOR_NODE,
   RAIN_OPACITY_NODE,
   RAIN_POSITION_NODE,
@@ -23,9 +26,14 @@ type CloudLayer = {
 const NodeMaterial = extend(MeshBasicNodeMaterial);
 
 /** Streaks in the air at once. Every one is placed by the vertex stage. */
-const RAIN_COUNT = 2600;
+const RAIN_COUNT = 1100;
 
-/** Cloud banks, placed by hand so they sit above the fall rather than in it. */
+/** Where the moon hangs, and how wide. Far enough back that cloud banks cross
+ * in front of it rather than all sitting behind. */
+const MOON_POSITION: [number, number, number] = [38, 41, -95];
+const MOON_RADIUS = 9;
+
+/** Cloud banks, placed by hand so they layer around the moon at several depths. */
 const CLOUD_LAYERS: CloudLayer[] = [
   { position: [-34, 30, -62], scale: [96, 34, 1] },
   { position: [28, 35, -74], scale: [120, 40, 1] },
@@ -33,6 +41,12 @@ const CLOUD_LAYERS: CloudLayer[] = [
   { position: [-52, 39, -88], scale: [110, 38, 1] },
   { position: [48, 28, -36], scale: [66, 22, 1] },
   { position: [0, 42, -104], scale: [160, 46, 1] },
+  { position: [44, 46, -72], scale: [88, 30, 1] },
+  { position: [-18, 48, -82], scale: [104, 32, 1] },
+  { position: [62, 36, -58], scale: [78, 26, 1] },
+  { position: [-66, 28, -50], scale: [84, 28, 1] },
+  { position: [20, 52, -96], scale: [130, 36, 1] },
+  { position: [-40, 22, -40], scale: [70, 22, 1] },
 ];
 
 /**
@@ -120,6 +134,36 @@ function Clouds() {
 }
 
 /**
+ * Hangs the moon in the sky, with a soft halo bleeding into the cloud bank.
+ * The sphere is unit-sized and scaled up so its object-space coordinates stay
+ * in `-1..1`, which is what keeps the crater noise at a predictable frequency.
+ * @returns The moon and its glow.
+ */
+function Moon() {
+  return (
+    <>
+      <mesh position={MOON_POSITION} scale={MOON_RADIUS}>
+        <sphereGeometry args={[1, 48, 32]} />
+        <NodeMaterial colorNode={MOON_COLOR_NODE} />
+      </mesh>
+      {/* Behind the sphere, so the glow never washes over the lit face. */}
+      <mesh
+        position={[MOON_POSITION[0], MOON_POSITION[1], MOON_POSITION[2] - MOON_RADIUS]}
+        scale={MOON_RADIUS * 6}
+      >
+        <planeGeometry args={[1, 1]} />
+        <NodeMaterial
+          colorNode={MOON_HALO_COLOR_NODE}
+          depthWrite={false}
+          opacityNode={MOON_HALO_OPACITY_NODE}
+          transparent
+        />
+      </mesh>
+    </>
+  );
+}
+
+/**
  * Fills the frustum behind everything with the sky gradient.
  * @returns The backdrop plane.
  */
@@ -201,6 +245,7 @@ export function RainScene(props: { animate: boolean; forceWebGL: boolean }) {
       }}
     >
       <Sky />
+      <Moon />
       <Clouds />
       <Rain />
       <CameraDrift enabled={props.animate} />
