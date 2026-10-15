@@ -3,7 +3,6 @@
 import { useRef } from 'react';
 import { AiSection } from './AiSection';
 import { Availability } from './Availability';
-import { CityBackground } from './CityBackground';
 import { Contact } from './Contact';
 import { Experience } from './Experience';
 import { Footer } from './Footer';
@@ -11,6 +10,7 @@ import { Hero } from './Hero';
 import { HexagonBackground } from './HexagonBackground';
 import { Nav } from './Nav';
 import { Projects } from './Projects';
+import { RainBackground } from './RainBackground';
 import { Skills } from './Skills';
 import { usePortfolioMotion } from './usePortfolioMotion';
 import { WhatsAppButton } from './WhatsAppButton';
@@ -26,7 +26,7 @@ export function PortfolioLanding() {
 
   return (
     <>
-      <CityBackground />
+      <RainBackground />
       {SHOW_HEXAGON_BACKGROUND ? <HexagonBackground /> : null}
       <div className="hbg-content" ref={root}>
         <Nav />

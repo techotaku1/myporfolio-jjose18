@@ -3,15 +3,16 @@
 import { Canvas, extend, useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import type { InstancedMesh } from 'three';
-import { Object3D } from 'three';
+import { Matrix4 } from 'three';
 import { MeshBasicNodeMaterial, WebGPURenderer } from 'three/webgpu';
-import { createSkyline } from './cityGeometry';
 import {
-  BUILDING_COLOR_NODE,
   CLOUD_COLOR_NODE,
   CLOUD_OPACITY_NODE,
+  RAIN_COLOR_NODE,
+  RAIN_OPACITY_NODE,
+  RAIN_POSITION_NODE,
   SKY_COLOR_NODE,
-} from './cityNodes';
+} from './rainNodes';
 
 type CloudLayer = {
   position: [number, number, number];
@@ -21,29 +22,21 @@ type CloudLayer = {
 /** Registers the node material as JSX so the module-scope graphs ride in as props. */
 const NodeMaterial = extend(MeshBasicNodeMaterial);
 
-const BUILDINGS = createSkyline({
-  seed: 20_260_515,
-  columns: 17,
-  rows: 11,
-  spacingX: 7.5,
-  spacingZ: 9,
-  minHeight: 3.5,
-  maxHeight: 34,
-  gapChance: 0.18,
-});
+/** Streaks in the air at once. Every one is placed by the vertex stage. */
+const RAIN_COUNT = 2600;
 
-/** Cloud banks, placed by hand so they frame the skyline instead of covering it. */
+/** Cloud banks, placed by hand so they sit above the fall rather than in it. */
 const CLOUD_LAYERS: CloudLayer[] = [
-  { position: [-34, 26, -62], scale: [96, 34, 1] },
-  { position: [28, 31, -74], scale: [120, 40, 1] },
-  { position: [6, 20, -44], scale: [72, 24, 1] },
-  { position: [-52, 35, -88], scale: [110, 38, 1] },
-  { position: [48, 22, -36], scale: [66, 22, 1] },
-  { position: [0, 38, -104], scale: [160, 46, 1] },
+  { position: [-34, 30, -62], scale: [96, 34, 1] },
+  { position: [28, 35, -74], scale: [120, 40, 1] },
+  { position: [6, 26, -44], scale: [72, 24, 1] },
+  { position: [-52, 39, -88], scale: [110, 38, 1] },
+  { position: [48, 28, -36], scale: [66, 22, 1] },
+  { position: [0, 42, -104], scale: [160, 46, 1] },
 ];
 
 /**
- * Drifts the camera so the skyline keeps a slow parallax with no input of its own.
+ * Drifts the camera so the sky keeps a slow parallax with no input of its own.
  * @param props - `enabled` false parks the camera on its opening framing.
  * @returns Nothing; the component only drives the shared camera.
  */
@@ -52,22 +45,24 @@ function CameraDrift(props: { enabled: boolean }) {
     const elapsed = props.enabled ? state.clock.elapsedTime : 0;
 
     state.camera.position.x = Math.sin(elapsed * 0.045) * 2.6;
-    state.camera.position.y = 16 + Math.sin(elapsed * 0.031) * 0.7;
-    state.camera.lookAt(0, 10, -45);
+    state.camera.position.y = 10 + Math.sin(elapsed * 0.031) * 0.7;
+    state.camera.lookAt(0, 16, -50);
   });
 
   return null;
 }
 
 /**
- * Draws the whole skyline as a single instanced box mesh.
- * @returns The instanced towers.
+ * Draws the whole downpour as one instanced mesh of streaks.
+ * @returns The instanced rain.
  */
-function Buildings() {
+function Rain() {
   const mesh = useRef<InstancedMesh>(null);
 
-  // Writing instance matrices is a one-way sync into a Three.js buffer, which
-  // is the external-system case a layout effect exists for.
+  // A fresh InstancedMesh carries an all-zero matrix buffer, which would
+  // collapse every streak onto the origin. The identities hand placement over
+  // to `RAIN_POSITION_NODE`, and the mesh skips culling because its bounds no
+  // longer describe where the vertex stage actually puts the drops.
   useLayoutEffect(() => {
     const instanced = mesh.current;
 
@@ -75,30 +70,31 @@ function Buildings() {
       return;
     }
 
-    const transform = new Object3D();
+    const identity = new Matrix4();
 
-    for (const [index, building] of BUILDINGS.entries()) {
-      transform.position.set(building.x, building.height / 2, building.z);
-      transform.scale.set(building.width, building.height, building.depth);
-      transform.updateMatrix();
-      instanced.setMatrixAt(index, transform.matrix);
+    for (let index = 0; index < RAIN_COUNT; index += 1) {
+      instanced.setMatrixAt(index, identity);
     }
 
     instanced.instanceMatrix.needsUpdate = true;
-    instanced.computeBoundingBox();
-    instanced.computeBoundingSphere();
   }, []);
 
   return (
-    <instancedMesh args={[undefined, undefined, BUILDINGS.length]} ref={mesh}>
+    <instancedMesh args={[undefined, undefined, RAIN_COUNT]} frustumCulled={false} ref={mesh}>
       <boxGeometry args={[1, 1, 1]} />
-      <NodeMaterial colorNode={BUILDING_COLOR_NODE} />
+      <NodeMaterial
+        colorNode={RAIN_COLOR_NODE}
+        depthWrite={false}
+        opacityNode={RAIN_OPACITY_NODE}
+        positionNode={RAIN_POSITION_NODE}
+        transparent
+      />
     </instancedMesh>
   );
 }
 
 /**
- * Hangs the drifting cloud banks above and behind the skyline.
+ * Hangs the drifting cloud banks over the rain.
  * @returns One transparent plane per cloud bank.
  */
 function Clouds() {
@@ -124,7 +120,7 @@ function Clouds() {
 }
 
 /**
- * Fills the frustum behind the city with the night-sky gradient.
+ * Fills the frustum behind everything with the sky gradient.
  * @returns The backdrop plane.
  */
 function Sky() {
@@ -151,21 +147,35 @@ function FirstFrame() {
 }
 
 /**
- * Renders the city: night sky, drifting clouds and an instanced skyline.
+ * Renders the backdrop: a gradient sky, drifting clouds and falling rain.
  * Nothing here is compute-bound and every material is a node material, so the
  * same scene runs on WebGPU's WebGL2 backend when the browser has no WebGPU.
  * @param props - `animate` false renders a single still frame instead of a loop; `forceWebGL` picks the WebGL2 backend.
  * @returns The canvas holding the scene.
  */
-export function CityScene(props: { animate: boolean; forceWebGL: boolean }) {
+export function RainScene(props: { animate: boolean; forceWebGL: boolean }) {
   return (
     <Canvas
-      camera={{ position: [0, 16, 42], fov: 48, near: 0.5, far: 320 }}
+      camera={{ position: [0, 10, 38], fov: 48, near: 0.5, far: 320 }}
       dpr={[1, 1.5]}
       frameloop={props.animate ? 'always' : 'demand'}
       gl={async (defaults) => {
         if (!(defaults.canvas instanceof HTMLCanvasElement)) {
-          throw new Error('The city background needs a browser canvas');
+          throw new Error('The rain background needs a browser canvas');
+        }
+
+        // `requestAdapter` resolving to null is the usual reason WebGPU is
+        // present yet unusable (no suitable GPU, acceleration switched off).
+        // The renderer then falls back to WebGL2 without saying so, which is
+        // indistinguishable on screen, so record the reason here.
+        let adapterState = 'absent';
+
+        if (navigator.gpu) {
+          try {
+            adapterState = (await navigator.gpu.requestAdapter()) ? 'ok' : 'none';
+          } catch {
+            adapterState = 'error';
+          }
         }
 
         const renderer = new WebGPURenderer({
@@ -177,10 +187,7 @@ export function CityScene(props: { animate: boolean; forceWebGL: boolean }) {
 
         await renderer.init();
 
-        // Both backends draw the same picture, so WebGPU running and WebGPU
-        // having quietly fallen back are indistinguishable on screen. Record
-        // which one is live; one console expression then answers it:
-        // document.querySelector('.city-bg canvas')?.dataset.backend
+        defaults.canvas.dataset.adapter = adapterState;
         defaults.canvas.dataset.backend =
           'isWebGPUBackend' in renderer.backend ? 'webgpu' : 'webgl2';
 
@@ -189,7 +196,7 @@ export function CityScene(props: { animate: boolean; forceWebGL: boolean }) {
     >
       <Sky />
       <Clouds />
-      <Buildings />
+      <Rain />
       <CameraDrift enabled={props.animate} />
       {props.animate ? null : <FirstFrame />}
     </Canvas>

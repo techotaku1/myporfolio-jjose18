@@ -2,7 +2,7 @@
    Sits behind the hexagon grid: same z-index, earlier in the DOM, so the grid
    paints over it. The gradient is not decoration — it is the backdrop browsers
    without WebGPU keep, and the placeholder while the scene's chunk loads. */
-.portfolio-root .city-bg {
+.portfolio-root .rain-bg {
   position: fixed;
   inset: 0;
   z-index: 0;
@@ -12,7 +12,7 @@
     radial-gradient(120% 70% at 50% 100%, oklch(0.42 0.08 268) 0%, transparent 62%),
     linear-gradient(to top, oklch(0.3 0.06 268), oklch(0.12 0.02 280) 60%);
 }
-.portfolio-root .city-bg canvas {
+.portfolio-root .rain-bg canvas {
   display: block;
 }
 

@@ -7,11 +7,11 @@ import { useSyncExternalStore } from 'react';
 // hydration, never in the initial payload. It does load on every browser
 // though — gating the mount on `navigator.gpu` also denied Three.js its own
 // WebGL2 fallback, which left browsers without WebGPU staring at the poster.
-const CityScene = dynamic(
+const RainScene = dynamic(
   async () => {
-    const scene = await import('./CityScene');
+    const scene = await import('./RainScene');
 
-    return scene.CityScene;
+    return scene.RainScene;
   },
   { ssr: false },
 );
@@ -82,7 +82,7 @@ function getServerReducedMotionSnapshot() {
  * cannot start at all.
  * @returns The fixed background layer.
  */
-export function CityBackground() {
+export function RainBackground() {
   const supportsWebGpu = useSyncExternalStore(
     subscribeToNothing,
     getWebGpuSnapshot,
@@ -95,8 +95,8 @@ export function CityBackground() {
   );
 
   return (
-    <div aria-hidden="true" className="city-bg">
-      <CityScene animate={!prefersReducedMotion} forceWebGL={!supportsWebGpu} />
+    <div aria-hidden="true" className="rain-bg">
+      <RainScene animate={!prefersReducedMotion} forceWebGL={!supportsWebGpu} />
     </div>
   );
 }

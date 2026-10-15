@@ -9,7 +9,7 @@ test.use({
   },
 });
 
-test.describe('City background', () => {
+test.describe('Rain background', () => {
   test('mounts a canvas on one of the two renderer backends', async ({ page }) => {
     const pageErrors: string[] = [];
 
@@ -19,7 +19,7 @@ test.describe('City background', () => {
 
     await page.goto('/');
 
-    const canvas = page.locator('.city-bg canvas');
+    const canvas = page.locator('.rain-bg canvas');
 
     // The chunk is ~1.5MB and only starts loading after hydration.
     await expect(canvas).toHaveCount(1, { timeout: 20_000 });
@@ -29,6 +29,10 @@ test.describe('City background', () => {
     await expect(canvas).toHaveAttribute('data-backend', /^webgpu$|^webgl2$/u, {
       timeout: 20_000,
     });
+
+    // Written alongside the backend: 'ok' | 'none' | 'error' | 'absent', which
+    // is what says why WebGPU was or was not available.
+    await expect(canvas).toHaveAttribute('data-adapter', /^ok$|^none$|^error$|^absent$/u);
 
     expect(pageErrors).toEqual([]);
   });
