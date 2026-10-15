@@ -52,8 +52,8 @@ function CameraDrift(props: { enabled: boolean }) {
     const elapsed = props.enabled ? state.clock.elapsedTime : 0;
 
     state.camera.position.x = Math.sin(elapsed * 0.045) * 2.6;
-    state.camera.position.y = 9 + Math.sin(elapsed * 0.031) * 0.7;
-    state.camera.lookAt(0, 7, -40);
+    state.camera.position.y = 8 + Math.sin(elapsed * 0.031) * 0.7;
+    state.camera.lookAt(0, 10, -40);
   });
 
   return null;
@@ -160,7 +160,7 @@ function FirstFrame() {
 export function CityScene(props: { animate: boolean }) {
   return (
     <Canvas
-      camera={{ position: [0, 9, 26], fov: 46, near: 0.5, far: 320 }}
+      camera={{ position: [0, 8, 18], fov: 52, near: 0.5, far: 320 }}
       dpr={[1, 1.5]}
       frameloop={props.animate ? 'always' : 'demand'}
       gl={async (defaults) => {

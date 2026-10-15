@@ -15,6 +15,11 @@ import { Skills } from './Skills';
 import { usePortfolioMotion } from './usePortfolioMotion';
 import { WhatsAppButton } from './WhatsAppButton';
 
+// Temporarily off while the WebGPU city is being tuned: the comb halves every
+// contrast behind it. Flip to `true` to bring the honeycomb back — nothing else
+// needs changing, and `portfolio.css` still carries its (now translucent) rules.
+const SHOW_HEXAGON_BACKGROUND = false;
+
 export function PortfolioLanding() {
   const root = useRef<HTMLDivElement>(null);
   usePortfolioMotion(root);
@@ -22,7 +27,7 @@ export function PortfolioLanding() {
   return (
     <>
       <CityBackground />
-      <HexagonBackground />
+      {SHOW_HEXAGON_BACKGROUND ? <HexagonBackground /> : null}
       <div className="hbg-content" ref={root}>
         <Nav />
         <main>

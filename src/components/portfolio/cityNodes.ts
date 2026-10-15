@@ -17,23 +17,30 @@ import {
 // itself is not it: that builds a `VarNode`, a narrower type.
 type FloatNode = ReturnType<typeof mx_fractal_noise_float>;
 
+// Storeys are deliberately coarse: at this camera distance a 1.5-unit grid
+// falls below a pixel and the windows average back into flat grey instead of
+// reading as lit rectangles.
 /** World units between two window rows, shared by every tower whatever its instance scale. */
-const FLOOR_HEIGHT = 1.45;
+const FLOOR_HEIGHT = 2.8;
 /** World units between two window columns. */
-const WINDOW_PITCH = 1.15;
+const WINDOW_PITCH = 2.4;
 /** Distance at which the haze starts eating the facades. */
 const HAZE_NEAR = 38;
 /** Distance at which a facade is fully dissolved into the sky. */
 const HAZE_FAR = 150;
 
-const FACADE = color('#090b13');
+// The scene is read through a half-opaque hexagon comb, which halves every
+// contrast in it. Separating facade from sky by only a few levels of 255 — as
+// a "subtle" night palette does — leaves nothing visible at all, so the
+// silhouette is carried by a bright horizon rather than by dark-on-dark.
+const FACADE = color('#161d33');
 const WINDOW_WARM = color('#ffc46b');
 const WINDOW_COOL = color('#6fd8ff');
 /** Horizon colour; `SKY_LOW` matches it so fogged towers dissolve seamlessly. */
-const HAZE = color('#121a30');
-const SKY_LOW = color('#121a30');
-const SKY_HIGH = color('#05070f');
-const CLOUD_TINT = color('#2a3a63');
+const HAZE = color('#3a4e85');
+const SKY_LOW = color('#3a4e85');
+const SKY_HIGH = color('#0d1326');
+const CLOUD_TINT = color('#5a72ad');
 
 /** Direction the facades are lit from, so neighbouring box faces read apart. */
 const LIGHT_DIRECTION = vec3(0.45, 0.35, 0.82);
@@ -68,7 +75,7 @@ const windowSeed = hashNode(cellId.x.mul(7.13).add(cellId.y.mul(131.7)));
 const windowTint = mix(WINDOW_WARM, WINDOW_COOL, step(0.78, windowSeed));
 const windowLit = step(0.46, windowSeed);
 const windowBreathe = windowSeed.mul(31.4).add(time.mul(0.35)).sin().mul(0.1).add(0.9);
-const windowEmission = windowTint.mul(windowMask).mul(windowLit).mul(windowBreathe).mul(1.35);
+const windowEmission = windowTint.mul(windowMask).mul(windowLit).mul(windowBreathe).mul(1.9);
 
 const faceShade = normalWorld.dot(LIGHT_DIRECTION).mul(0.5).add(0.5);
 const facade = FACADE.mul(faceShade.mul(0.7).add(0.35));
@@ -93,7 +100,7 @@ const cloudFalloff = uv().sub(0.5).length().mul(2).oneMinus().saturate().pow(1.6
 /** Cloud colour, brightened where the noise field is dense. */
 export const CLOUD_COLOR_NODE = CLOUD_TINT.mul(cloudDensity.mul(0.6).add(0.55));
 /** Cloud opacity: soft-edged blobs that never reach full coverage. */
-export const CLOUD_OPACITY_NODE = smoothstep(0.46, 0.8, cloudDensity.mul(cloudFalloff)).mul(0.55);
+export const CLOUD_OPACITY_NODE = smoothstep(0.34, 0.72, cloudDensity.mul(cloudFalloff)).mul(0.8);
 
 /** Vertical sky gradient for the backdrop plane, lightest at the horizon. */
 export const SKY_COLOR_NODE = mix(SKY_LOW, SKY_HIGH, uv().y.pow(0.75));

@@ -9,8 +9,8 @@
   overflow: hidden;
   pointer-events: none;
   background:
-    radial-gradient(120% 70% at 50% 100%, oklch(0.22 0.04 268) 0%, transparent 60%),
-    linear-gradient(to top, oklch(0.14 0.02 272), oklch(0.09 0.01 286) 55%);
+    radial-gradient(120% 70% at 50% 100%, oklch(0.42 0.08 268) 0%, transparent 62%),
+    linear-gradient(to top, oklch(0.3 0.06 268), oklch(0.12 0.02 280) 60%);
 }
 .portfolio-root .city-bg canvas {
   display: block;
@@ -42,7 +42,7 @@
   position: absolute;
   inset: 0;
   /* Translucent so the city reads through the comb; opaque fills would hide it. */
-  background: oklch(0.17 0.01 286 / 0.66);
+  background: oklch(0.17 0.01 286 / 0.5);
   transition: background 1s ease;
 }
 /* ::after = inner fill that sits on top and hides most of ::before,
@@ -51,16 +51,16 @@
   content: '';
   position: absolute;
   inset: var(--hbg-margin, 3px);
-  background: oklch(0.11 0.01 286 / 0.52);
+  background: oklch(0.11 0.01 286 / 0.3);
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 }
 /* On hover: instantly light up — transition overridden to 0s */
 .portfolio-root .hbg-hex:hover::before {
-  background: oklch(0.38 0.01 286 / 0.85);
+  background: oklch(0.38 0.01 286 / 0.78);
   transition: background 0s;
 }
 .portfolio-root .hbg-hex:hover::after {
-  background: oklch(0.18 0.01 286 / 0.6);
+  background: oklch(0.18 0.01 286 / 0.42);
 }
 .portfolio-root .hbg-content {
   position: relative;
