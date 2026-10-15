@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { AiSection } from './AiSection';
 import { Availability } from './Availability';
+import { CityBackground } from './CityBackground';
 import { Contact } from './Contact';
 import { Experience } from './Experience';
 import { Footer } from './Footer';
@@ -20,6 +21,7 @@ export function PortfolioLanding() {
 
   return (
     <>
+      <CityBackground />
       <HexagonBackground />
       <div className="hbg-content" ref={root}>
         <Nav />

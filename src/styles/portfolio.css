@@ -1,3 +1,21 @@
+/* ---- 3d city background ----
+   Sits behind the hexagon grid: same z-index, earlier in the DOM, so the grid
+   paints over it. The gradient is not decoration — it is the backdrop browsers
+   without WebGPU keep, and the placeholder while the scene's chunk loads. */
+.portfolio-root .city-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 70% at 50% 100%, oklch(0.22 0.04 268) 0%, transparent 60%),
+    linear-gradient(to top, oklch(0.14 0.02 272), oklch(0.09 0.01 286) 55%);
+}
+.portfolio-root .city-bg canvas {
+  display: block;
+}
+
 /* ---- hexagon background ---- */
 .portfolio-root .hbg-wrap {
   position: fixed;
@@ -23,7 +41,8 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: oklch(0.17 0.01 286);
+  /* Translucent so the city reads through the comb; opaque fills would hide it. */
+  background: oklch(0.17 0.01 286 / 0.66);
   transition: background 1s ease;
 }
 /* ::after = inner fill that sits on top and hides most of ::before,
@@ -32,16 +51,16 @@
   content: '';
   position: absolute;
   inset: var(--hbg-margin, 3px);
-  background: oklch(0.11 0.01 286);
+  background: oklch(0.11 0.01 286 / 0.52);
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 }
 /* On hover: instantly light up — transition overridden to 0s */
 .portfolio-root .hbg-hex:hover::before {
-  background: oklch(0.38 0.01 286);
+  background: oklch(0.38 0.01 286 / 0.85);
   transition: background 0s;
 }
 .portfolio-root .hbg-hex:hover::after {
-  background: oklch(0.18 0.01 286);
+  background: oklch(0.18 0.01 286 / 0.6);
 }
 .portfolio-root .hbg-content {
   position: relative;
