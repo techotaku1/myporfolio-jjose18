@@ -3,7 +3,7 @@
 import { Canvas, extend, useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import type { InstancedMesh } from 'three';
-import { Matrix4 } from 'three';
+import { Matrix4, PCFShadowMap } from 'three';
 import { MeshBasicNodeMaterial, WebGPURenderer } from 'three/webgpu';
 import {
   CLOUD_COLOR_NODE,
@@ -159,6 +159,12 @@ export function RainScene(props: { animate: boolean; forceWebGL: boolean }) {
       camera={{ position: [0, 10, 38], fov: 48, near: 0.5, far: 320 }}
       dpr={[1, 1.5]}
       frameloop={props.animate ? 'always' : 'demand'}
+      // The scene casts no shadows, but Fiber's `shadows` prop defaults to
+      // `false`, and a boolean makes it set `shadowMap.type` to
+      // `PCFSoftShadowMap` anyway — a type WebGPURenderer dropped, so it warns
+      // on every single render. Passing the options object instead keeps the
+      // shadow map off and names a type the renderer still knows.
+      shadows={{ enabled: false, type: PCFShadowMap }}
       gl={async (defaults) => {
         if (!(defaults.canvas instanceof HTMLCanvasElement)) {
           throw new Error('The rain background needs a browser canvas');
