@@ -52,8 +52,8 @@ function CameraDrift(props: { enabled: boolean }) {
     const elapsed = props.enabled ? state.clock.elapsedTime : 0;
 
     state.camera.position.x = Math.sin(elapsed * 0.045) * 2.6;
-    state.camera.position.y = 8 + Math.sin(elapsed * 0.031) * 0.7;
-    state.camera.lookAt(0, 10, -40);
+    state.camera.position.y = 16 + Math.sin(elapsed * 0.031) * 0.7;
+    state.camera.lookAt(0, 10, -45);
   });
 
   return null;
@@ -151,16 +151,16 @@ function FirstFrame() {
 }
 
 /**
- * Renders the WebGPU city: night sky, drifting clouds and an instanced skyline.
- * Lives behind a `navigator.gpu` check in `CityBackground`, so this module —
- * and the Three.js bundle it pulls in — never reaches a browser without WebGPU.
- * @param props - `animate` false renders a single still frame instead of a loop.
+ * Renders the city: night sky, drifting clouds and an instanced skyline.
+ * Nothing here is compute-bound and every material is a node material, so the
+ * same scene runs on WebGPU's WebGL2 backend when the browser has no WebGPU.
+ * @param props - `animate` false renders a single still frame instead of a loop; `forceWebGL` picks the WebGL2 backend.
  * @returns The canvas holding the scene.
  */
-export function CityScene(props: { animate: boolean }) {
+export function CityScene(props: { animate: boolean; forceWebGL: boolean }) {
   return (
     <Canvas
-      camera={{ position: [0, 8, 18], fov: 52, near: 0.5, far: 320 }}
+      camera={{ position: [0, 16, 42], fov: 48, near: 0.5, far: 320 }}
       dpr={[1, 1.5]}
       frameloop={props.animate ? 'always' : 'demand'}
       gl={async (defaults) => {
@@ -172,6 +172,7 @@ export function CityScene(props: { animate: boolean }) {
           canvas: defaults.canvas,
           antialias: true,
           alpha: true,
+          forceWebGL: props.forceWebGL,
         });
 
         await renderer.init();

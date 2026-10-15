@@ -3,8 +3,10 @@
 import dynamic from 'next/dynamic';
 import { useSyncExternalStore } from 'react';
 
-// Loaded only once `navigator.gpu` answers, so a browser without WebGPU never
-// downloads Three.js. A canvas cannot prerender either, hence `ssr: false`.
+// A canvas cannot prerender, hence `ssr: false`: the chunk loads after
+// hydration, never in the initial payload. It does load on every browser
+// though — gating the mount on `navigator.gpu` also denied Three.js its own
+// WebGL2 fallback, which left browsers without WebGPU staring at the poster.
 const CityScene = dynamic(
   async () => {
     const scene = await import('./CityScene');
@@ -74,9 +76,10 @@ function getServerReducedMotionSnapshot() {
 }
 
 /**
- * Mounts the WebGPU city behind the hexagon grid, or leaves its CSS poster in place.
- * The wrapper always renders: its gradient is the backdrop for browsers without
- * WebGPU and the placeholder while the scene's chunk loads.
+ * Mounts the city scene as the page's backdrop, on WebGPU where it exists and
+ * on the WebGL2 fallback where it does not. The wrapper always renders: its
+ * gradient is what shows while the scene's chunk loads, and if the canvas
+ * cannot start at all.
  * @returns The fixed background layer.
  */
 export function CityBackground() {
@@ -93,7 +96,7 @@ export function CityBackground() {
 
   return (
     <div aria-hidden="true" className="city-bg">
-      {supportsWebGpu ? <CityScene animate={!prefersReducedMotion} /> : null}
+      <CityScene animate={!prefersReducedMotion} forceWebGL={!supportsWebGpu} />
     </div>
   );
 }
